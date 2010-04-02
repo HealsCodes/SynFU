@@ -52,12 +52,12 @@ class Reactor(FUCore):
     
     MAILMAN_SIG = [
     	re.compile('^https?://service.piratenpartei.de/mailman/[^ ]*$', re.M),
-    	re.compile('^__*$'),
+    	re.compile('^(__*$|--*$)'),
     ]
     
     MAILMAN_COMPLEX = [
     	re.compile('^.*https?://.*/mailman/listinfo/[^ ]*$', re.M),
-    	re.compile('^__*$'),
+    	re.compile('^(__*$|--*$)'),
     ]
     
     SIGN_NOTICE = [
@@ -68,7 +68,7 @@ class Reactor(FUCore):
     
     BROKEN_MULTIPART = re.compile('^Content-Type: [^;]*; boundary=')
     
-    VERSION = '0.3 (based on mutagenX 0.4g)'
+    VERSION = '0.3a (based on mutagenX 0.4g)'
     NOTICE  = '(c) 2009-2010 Rene Koecher <shirk@bitspin.org>'
     
     def __init__(self):
@@ -305,8 +305,13 @@ class Reactor(FUCore):
                 if Reactor.MAILMAN_COMPLEX[1].match(parts[i]):
                     try:
                         for j in range(i + 1, i + 10):
+                            if Reactor.MAILMAN_COMPLEX[1].match(parts[j].strip()):
+                                self._log('--- not a mailman signature, reset at {0}', j, rec=rec)
+                                skip    = 0
+                                break
+                            
                             if Reactor.MAILMAN_COMPLEX[0].match(parts[j].strip()):
-                                self._log('--- skip lines starting at {0}', j)
+                                self._log('--- skip lines starting at {0}', j, rec=rec)
                                 skip    = 1
                                 mutated = True
                                 break
