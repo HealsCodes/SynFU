@@ -122,7 +122,7 @@ class Config(object):
         paths.insert(0, os.path.join(os.getenv('HOME','/'),'.config'))
         
         if args:
-            paths.extend(args)
+            paths = list(args) + paths
         
         parser = optparse.OptionParser()
         parser.add_option('-c', '--config',
