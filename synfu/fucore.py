@@ -114,7 +114,7 @@ class FUCore(object):
             return True
                 
         return False
-        
+    
     def _find_list_tag(self, message, rec=0, plain=False):
         """
         Filter *message* for a valid list tag.
@@ -174,7 +174,7 @@ class FUCore(object):
         
         if tag_base:
             self._log('--- list tag: "[*{0}*]"', format(tag_base), rec=rec)
-            return re.compile('(?i)\s*\[[^[]*{0}[^]]*\]'.format(tag_base))
+            return re.compile('(?i)\s*\[\s*{0}[^]]*\]'.format(tag_base))
             
         self._log('--- no list tag found', rec=rec)
         # return 'moab'
