@@ -61,7 +61,7 @@ class PostFilter(FUCore):
         
         self._conf = Config.get().postfilter
 
-    def mail2news(self):
+    def mail2news(self, fobj=sys.stdin):
         """
         This method provides a drop-in-replacement to news2mail.pl used by INN_.
         It expects the same data on :attr:`sys.stdin` and uses the same
@@ -73,7 +73,7 @@ class PostFilter(FUCore):
             SynFu provides the wrapper script :command:`synfu-mail2news` (see :ref:`synfu-mail2news`) for this job.
         """
         
-        self._data = sys.stdin.read()
+        self._data = fobj.read()
         
         mm  = email.message_from_string(self._data)
         if (self._is_cancel(mm)):
@@ -147,7 +147,7 @@ class PostFilter(FUCore):
         self._log('!!! No matching List-ID for {0}', lid)
         sys.exit(1)
     
-    def news2mail(self):
+    def news2mail(self, fobj=sys.stdin):
         """
         This method provides a drop-in-replacement to news2mail.pl used by INN_.
         It expects the same data on :attr:`sys.stdin` and uses the same
@@ -175,7 +175,7 @@ class PostFilter(FUCore):
         ltok  = re.compile(r'\s+')
         
         self._log('--- begin')
-        line = sys.stdin.readline()
+        line = fobj.readline()
         while line:
             line = line.strip()
             if not line:
@@ -214,7 +214,7 @@ class PostFilter(FUCore):
             
             if not addrs:
                 self._log('!!! No recipients for LTOK = \'{0}\'', line)
-                line = sys.stdin.readline()
+                line = fobj.readline()
                 continue
             
             self._log('--- addrs: {0}', addrs)
@@ -285,7 +285,7 @@ class PostFilter(FUCore):
                                                  stderr=sys.stderr)
                     sendmail.communicate(str(mm))
                 
-                line = sys.stdin.readline()
+                line = fobj.readline()
             self._log('--- end')
     
 
