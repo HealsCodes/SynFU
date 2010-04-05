@@ -77,13 +77,13 @@ class PostFilter(FUCore):
         
         mm  = email.message_from_string(self._data)
         if (self._is_cancel(mm)):
-            sys.exit(0)
+            return 0
             
         lid = mm.get('List-ID', mm.get('List-Id', None))
         
         if not lid:
             self._log('!!! Unable to find a valid List-Id')
-            sys.exit(1)
+            return 1
         
         cmd_args = { 
             'NNTP_ID' : []
@@ -142,10 +142,10 @@ class PostFilter(FUCore):
             proc.wait()
             
             self._log('--- sendmail returned: {0}', proc.returncode)
-            sys.exit(proc.returncode)
+            return proc.returncode
             
         self._log('!!! No matching List-ID for {0}', lid)
-        sys.exit(1)
+        return 1
     
     def news2mail(self, fobj=sys.stdin):
         """
@@ -287,6 +287,7 @@ class PostFilter(FUCore):
                 
                 line = fobj.readline()
             self._log('--- end')
+            return 0
     
 
 def FilterMail2News():
@@ -294,12 +295,12 @@ def FilterMail2News():
     Global wrapper for setup-tools.
     """
     filter = PostFilter()
-    filter.mail2news()
+    sys.exit(filter.mail2news())
 
 def FilterNews2Mail():
     """
     Global wrapper for setup-tools.
     """
     filter = PostFilter()
-    filter.news2mail()
+    sys.exit(filter.news2mail())
 
