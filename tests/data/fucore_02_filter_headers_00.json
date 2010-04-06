@@ -1,0 +1,34 @@
+[
+    [
+        "Return-Path", 
+        "<test-bounces@lists.piratenpartei.de>"
+    ], 
+    [
+        "Message-ID", 
+        "<4BA66070.6090901@synuf.suite>"
+    ], 
+    [
+        "Date", 
+        "Sun, 21 Mar 2010 19:07:44 +0100"
+    ], 
+    [
+        "From", 
+        "SynFU Testsuite <test@synfu.suite>"
+    ], 
+    [
+        "MIME-Version", 
+        "1.0"
+    ], 
+    [
+        "Subject", 
+        "Test Header [ignore]"
+    ], 
+    [
+        "List-Id", 
+        "=?utf-8?q?Testliste_f=C3=BCr_Tests_der_Synchronisation_mit_Syncom?=\r\n\t<test.lists.piratenpartei.de>"
+    ], 
+    [
+        "Errors-To", 
+        "test-bounces@lists.piratenpartei.de"
+    ]
+]

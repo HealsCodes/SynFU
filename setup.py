@@ -48,6 +48,7 @@ setup(name='SynFU',
             'synfu-mail2news = synfu.postfilter:FilterMail2News',
             'synfu-news2mail = synfu.postfilter:FilterNews2Mail'
         ],
-      }
+      },
+      test_suite="tests.suite"
 )
 
