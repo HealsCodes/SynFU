@@ -96,7 +96,27 @@ class _PostfilterConfig(yaml.YAMLObject):
                 pass
         
         return self
+
+class _ImpConfig(yaml.YAMLObject):
+    yaml_tag = u'tag:news.piratenpartei.de,2010:synfu/imp'
+
+    def __init__(self, **kwargs):
+        super(_FuseConfig, self).__init__()
     
+    def __repr__(self):
+        return '{0}{{ newsgroups: "{1}", listinfo[{2}] }}'.format(
+               self.__class__.__name__,
+               self.newsgroups,
+               len(self.listinfo))
+    
+    def configure(self):
+        self.newsgroups  = self.settings.get('newsgroups' , '/dev/null').strip()
+        self.http_proxy  = self.settings.get('http_proxy' , os.environ.get('http_proxy', None))
+        self.https_proxy = self.settings.get('https_proxy', os.environ.get('https_proxy', None))
+        self.verbose     = self.settings.get('verbose'  , False)
+        self.verbosity   = self.settings.get('verbosity', 0)
+       
+        return self
     
 class Config(object):
     """SynFU global config"""
@@ -156,6 +176,7 @@ class Config(object):
 
         self.postfilter = None
         self.reactor    = None
+        self.imp        = None
         
         with open(path, 'r') as data:
             for k in yaml.load_all(data.read()):
@@ -165,6 +186,9 @@ class Config(object):
                 elif type(k) == _ReactorConfig:
                     self.reactor = k.configure()
                     
+                elif type(k) == _ImpConfig:
+                    self.imp = k.configure()
+                    
                 else:
                     print('What is type(k) == {0} ?'.format(type(k)))
                     
@@ -173,6 +197,8 @@ class Config(object):
             
         if not self.reactor:
             raise RuntimeError('Mandatory reactor config missing.')
-
+            
+        if not self.imp:
+            raise RuntimeError('Mandatory imp config missing.')
     
     
