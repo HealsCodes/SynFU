@@ -95,18 +95,22 @@ class FUCoreSuite(unittest.TestCase):
                     open(os.path.join(self._data_path, 'fucore_02_filter_headers_02.msg') , 'r'),
                     open(os.path.join(self._data_path, 'fucore_02_filter_headers_02.json'), 'r'),
                     open(os.path.join(self._data_path, 'fucore_02_filter_headers_03.msg') , 'r'),
-                    open(os.path.join(self._data_path, 'fucore_02_filter_headers_03.json'), 'r')) \
+                    open(os.path.join(self._data_path, 'fucore_02_filter_headers_03.json'), 'r'),
+                    open(os.path.join(self._data_path, 'fucore_02_filter_headers_04.msg') , 'r'),
+                    open(os.path.join(self._data_path, 'fucore_02_filter_headers_04.json'), 'r')) \
              \
-             as (headers_ignored, headers_ignored_exp,
-                 headers_unicode, headers_unicode_exp,
-                 headers_outlook, headers_outlook_exp,
-                 headers_mid    , headers_mid_exp):
+             as (headers_ignored , headers_ignored_exp,
+                 headers_unicode , headers_unicode_exp,
+                 headers_outlook , headers_outlook_exp,
+                 headers_mid     , headers_mid_exp,
+                 headers_unicode2, headers_unicode2_exp):
              
              self._headers = [
-                ('ignore'    , email.message_from_file(headers_ignored), False, json.load(headers_ignored_exp)),
-                ('unicode'   , email.message_from_file(headers_unicode), False, json.load(headers_unicode_exp)),
-                ('outlook'   , email.message_from_file(headers_outlook), True , json.load(headers_outlook_exp)),
-                ('Message-Id', email.message_from_file(headers_mid)    , False, json.load(headers_mid_exp))
+                ('ignored headers' , email.message_from_file(headers_ignored) , False, json.load(headers_ignored_exp)),
+                ('Unicode subject' , email.message_from_file(headers_unicode) , False, json.load(headers_unicode_exp)),
+                ('Outlook fixes'   , email.message_from_file(headers_outlook) , True , json.load(headers_outlook_exp)),
+                ('Message-Id fixes', email.message_from_file(headers_mid)     , False, json.load(headers_mid_exp)),
+                ('Unicode List-Tag', email.message_from_file(headers_unicode2), True , json.load(headers_unicode2_exp))
              ]
         
         self._fucore = FUCoreBase(self._cfg)
@@ -125,7 +129,7 @@ class FUCoreSuite(unittest.TestCase):
         sys.stderr.write('\n -- ')
     
     def test_02_filter_headers(self):
-        tag = re.compile('(?i)\s*\[\s*test[^]]*\]')
+        tag = re.compile('(?i)\s*\[\s*(test|ÄÖÜ)[^]]*\]')
         
         for (what, msg, outlook_hacks, exp) in self._headers:
             sys.stderr.write('\n    {0}.. '.format(what))

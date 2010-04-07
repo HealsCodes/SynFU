@@ -124,10 +124,12 @@ class PostFilter(FUCore):
                     tag_hints.append(tag_base)
         
         if tag_hints:
+            tag_hints = email.header.make_header([(','.join(tag_hints), 'utf-8')])
+            
             try:
-                mm.replace_header('X-SynFU-Tags', ','.join(tag_hints))
+                mm.replace_header('X-SynFU-Tags', tag_hints)
             except KeyError:
-                mm._headers.append(('X-SynFU-Tags', ','.join(tag_hints)))
+                mm._headers.append(('X-SynFU-Tags', tag_hints))
                 
         if cmd_args['NNTP_ID']:
             cmd_args['NNTP_ID'] = ' '.join(cmd_args['NNTP_ID'])
