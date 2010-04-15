@@ -290,4 +290,3 @@ class FUCore(object):
             self._log('!!! had to add a dummy subject', rec=rec)
             
         return headers
-    
