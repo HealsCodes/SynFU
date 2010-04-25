@@ -90,7 +90,7 @@ class _PostfilterConfig(yaml.YAMLObject):
         
         for e in self.filters:
             try:
-                e['exp'] = re.compile(e['smtp'])
+                e['exp'] = re.compile('(?i){0}'.format(e['smtp']))
             except Exception,err:
                 sys.stderr.write('Could not compile expression "{0[smtp]}": {1}\n'.format(e, err))
                 pass
