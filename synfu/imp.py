@@ -57,7 +57,7 @@ class Imp(FUCore):
     keep Imp from being used for future background processing needs.
     """
     
-    VERSION = '0.1'
+    VERSION = '0.3'
     
     def __init__(self):
         super(Imp, self).__init__()
@@ -264,6 +264,7 @@ class Imp(FUCore):
                     if group in lists[host]:
                         
                         if not lists[host][group][1]:
+                            del lists[host][group]
                             break
                         
                         if isinstance(lists[host][group][1], unicode):
@@ -275,13 +276,31 @@ class Imp(FUCore):
                         newsgroups.write('{0}\t\t{1}\n'.format(
                                          group, lists[host][group][1]))
                         
+                        del lists[host][group]
+                        
                         match = True
                         break
                         
                 if not match:
                     self._log('--- keep: {0}', line, verbosity=3)
                     newsgroups.write(line + '\n')
-                
+            
+            # aftermath
+            for host in lists:
+                for group in lists[host]:
+                    if isinstance(lists[host][group][1], unicode):
+                        lists[host][group][1] = lists[host][group][1].encode('UTF-8')
+                    
+                    self._log('--- +new: {0}\t\t{1}',
+                              group, lists[host][group][1] or '<None>', verbosity=3)
+                    
+                    if lists[host][group][1]:
+                        newsgroups.write('{0}\t\t{1}\n'.format(
+                                        group, lists[host][group][1]))
+                    else:
+                        # don't record {groupname}\t\tNone
+                        newsgroups.write('{0}\t\t\n'.format(group))
+            
             newsgroups.close()
             self._log('--- update done.')
             self._log('--- end')
