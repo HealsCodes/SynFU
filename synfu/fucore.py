@@ -50,7 +50,7 @@ class FUCore(object):
     """
     
     HEADER_IGN  = [
-    	re.compile('^(X-.*|To|Received|Delivered.*|Sender.*|Precedence|Reply.*)'),
+    	re.compile('^(X-.*|Cc|To|Received|Delivered.*|Sender.*|Precedence|Reply.*)'),
     	re.compile('^List-(Unsubscribe|Archive|Post|Help|Subscribe)'),
     	re.compile('^(Lines|NNTP-Posting-(Date|Host)|Xref|Path)')
     ]
@@ -174,7 +174,7 @@ class FUCore(object):
         
         if tag_base:
             self._log('--- list tag: "[*{0}*]"', format(tag_base), rec=rec)
-            return re.compile('(?i)\s*\[\s*{0}[^]]*\]'.format(tag_base))
+            return re.compile('(?i)\[[^[]*{0}[^]]*\]'.format(tag_base))
             
         self._log('--- no list tag found', rec=rec)
         # return 'moab'
