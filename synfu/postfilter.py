@@ -53,7 +53,7 @@ class PostFilter(FUCore):
     
     """
     
-    VERSION = '0.8'
+    VERSION = '0.8a'
     NOTICE  = '(c) 2009-2010 Rene Koecher <shirk@bitspin.org>'
     
     def __init__(self):
@@ -116,12 +116,18 @@ class PostFilter(FUCore):
             
             if 'force_tag' in mapping:
                 self._log('--- appending "{0}" to tag hints', mapping['force_tag'], verbosity=2)
-                tag_hints.append(mapping['force_tag'])
+                if isinstance(mapping['force_tag'], unicode):
+                    tag_hints.append(mapping['force_tag'].encode('UTF-8'))
+                else:
+                    tag_hints.append(mapping['force_tag'])
             else:
                 tag_base = self._find_list_tag(mm, plain=True)
                 if tag_base:
                     self._log('--- using list-tags "{0}" as hints', tag_base, verbosity=2)
-                    tag_hints.append(tag_base)
+                    if isinstance(tag_base, unicode):
+                        tag_hints.append(tag_base.encode('UTF-8'))
+                    else:
+                        tag_hints.append(tag_base)
         
         if tag_hints:
             tag_hints = email.header.make_header([(','.join(tag_hints), 'utf-8')])
