@@ -162,7 +162,7 @@ class Config(object):
                 else:
                     conf_path = path
                 
-                Config._sharedConfig = Config(conf_path)
+                Config._sharedConfig = Config(conf_path, args)
                 
                 return Config._sharedConfig
                 
@@ -171,12 +171,13 @@ class Config(object):
         
         raise RuntimeError('Failed to load synfu.conf')
     
-    def __init__(self, path):
+    def __init__(self, path, *optargs):
         super(Config, self).__init__()
 
         self.postfilter = None
         self.reactor    = None
         self.imp        = None
+        self.optargs    = optargs
         
         with open(path, 'r') as data:
             for k in yaml.load_all(data.read()):
