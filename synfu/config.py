@@ -127,7 +127,7 @@ class Config(object):
         Add a new option to the global set of parameters.
         
         After a call to :meth:`Config.get` the parsed options and arguments will
-        be accessible as :attr:`Config.opts` and :attr:`Config.optargs`.
+        be accessible as :attr:`Config.option` and :attr:`Config.optargs`.
         
         :param: \*args: positional arguments to passed to :meth:`optparse.OptionParser.add_option`
         :param: \**keywords: keyword arguments to passed to :meth:`optpars.OptionParser.add_option`
