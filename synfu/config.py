@@ -104,25 +104,46 @@ class _ImpConfig(yaml.YAMLObject):
         super(_FuseConfig, self).__init__()
     
     def __repr__(self):
-        return '{0}{{ newsgroups: "{1}", listinfo[{2}] }}'.format(
+        return '{0}{{ plugins: "{3}" }}'.format(
                self.__class__.__name__,
-               self.newsgroups,
-               len(self.listinfo))
+               self.plugin_dir)
     
     def configure(self):
-        self.newsgroups  = self.settings.get('newsgroups' , '/dev/null').strip()
-        self.http_proxy  = self.settings.get('http_proxy' , os.environ.get('http_proxy', None))
-        self.https_proxy = self.settings.get('https_proxy', os.environ.get('https_proxy', None))
+        self.plugin_dir  = self.settings.get('plugin_dir' , '/var/lib/synfu/imp/')
         self.verbose     = self.settings.get('verbose'  , False)
         self.verbosity   = self.settings.get('verbosity', 0)
-       
+
         return self
     
 class Config(object):
     """SynFU global config"""
     
     _sharedConfig = None
+    _parser       = None
     
+    @classmethod
+    def add_option(cls, *args, **kwargs):
+        """
+        Add a new option to the global set of parameters.
+        
+        After a call to :meth:`Config.get` the parsed options and arguments will
+        be accessible as :attr:`Config.opts` and :attr:`Config.optargs`.
+        
+        :param: \*args: positional arguments to passed to :meth:`optparse.OptionParser.add_option`
+        :param: \**keywords: keyword arguments to passed to :meth:`optpars.OptionParser.add_option`
+        :returns: None
+        """
+        
+        if Config._parser == None:
+            Config._parser = optparse.OptionParser()
+            Config._parser.add_option('-c', '--config',
+                                      dest    = 'config_path',
+                                      action  = 'store',
+                                      default = None,
+                                      help    = 'Path to config file')
+        if args:
+            Config._parser.add_option(*args, **kwargs)
+
     @classmethod
     def get(cls, *args):
         """
@@ -144,14 +165,8 @@ class Config(object):
         if args:
             paths = list(args) + paths
         
-        parser = optparse.OptionParser()
-        parser.add_option('-c', '--config',
-                          dest    = 'config_path',
-                          action  = 'store',
-                          default = None,
-                          help    = 'Path to config file')
-                          
-        (opts, args) = parser.parse_args(sys.argv[1:])
+        
+        (opts, args) = Config._parser.parse_args(sys.argv[1:])
         if opts.config_path:
             paths.append(opts.config_path)
         
@@ -162,7 +177,7 @@ class Config(object):
                 else:
                     conf_path = path
                 
-                Config._sharedConfig = Config(conf_path, args)
+                Config._sharedConfig = Config(conf_path, opts, args)
                 
                 return Config._sharedConfig
                 
@@ -171,12 +186,13 @@ class Config(object):
         
         raise RuntimeError('Failed to load synfu.conf')
     
-    def __init__(self, path, *optargs):
+    def __init__(self, path, options, *optargs):
         super(Config, self).__init__()
 
         self.postfilter = None
         self.reactor    = None
         self.imp        = None
+        self.options    = options
         self.optargs    = optargs
         
         with open(path, 'r') as data:
