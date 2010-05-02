@@ -124,6 +124,7 @@ class Config(object):
     @classmethod
     def add_option(cls, *args, **kwargs):
         """
+        .. versionadded:: 0.4.10
         Add a new option to the global set of parameters.
         
         After a call to :meth:`Config.get` the parsed options and arguments will
@@ -168,7 +169,7 @@ class Config(object):
         
         (opts, args) = Config._parser.parse_args(sys.argv[1:])
         if opts.config_path:
-            paths.append(opts.config_path)
+            paths.insert(0, opts.config_path)
         
         for path in paths:
             try:
