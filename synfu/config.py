@@ -137,11 +137,7 @@ class Config(object):
         
         if Config._parser == None:
             Config._parser = optparse.OptionParser()
-            Config._parser.add_option('-c', '--config',
-                                      dest    = 'config_path',
-                                      action  = 'store',
-                                      default = None,
-                                      help    = 'Path to config file')
+            
         if args:
             Config._parser.add_option(*args, **kwargs)
 
@@ -159,6 +155,12 @@ class Config(object):
         
         if Config._sharedConfig:
             return Config._sharedConfig
+        
+        Config.add_option('-c', '--config',
+                          dest    = 'config_path',
+                          action  = 'store',
+                          default = None,
+                          help    = 'Path to config file')
         
         paths = ['.', '/etc', '/usr/local/etc']
         paths.insert(0, os.path.join(os.getenv('HOME','/'),'.config'))
