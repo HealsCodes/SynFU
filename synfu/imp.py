@@ -38,7 +38,7 @@
 
 """
 
-import sys, re, urllib2
+import sys, os, re, urllib2, pkgutil
 from BeautifulSoup import BeautifulSoup, StopParsing
 
 from synfu.config import Config
@@ -48,13 +48,13 @@ class Imp(FUCore):
     """
     Imp - the periodic Imp
     
-    SynFU Imp is a background helper designed to run periodic maintenance tasks.
-    At the time of this writing these tasks are limited to the following:
+    | SynFU Imp is a background helper designed to run periodic maintenance jobs.
+    | At the time of this writing the following jobs are built-in:
     
-        - newsgroup namesynch -- update newsgroup descriptions via mailman
+        - GroomNewsgroups -- update newsgroup descriptions via mailman
     
-    While being very specific, the current task is in no way meant to
-    keep Imp from being used for future background processing needs.
+    | Each job is provided as a seperate python file containing arbitrary
+    | job definitions in the form of :class:`ImpJob` subclasses.
     """
     
     VERSION = '0.3'
@@ -62,256 +62,203 @@ class Imp(FUCore):
     def __init__(self):
         super(Imp, self).__init__()
         
-        self._conf = Config.get().imp
-        proxy_list = []
-        
-        if self._conf.http_proxy:
-            proxy_list.append(urllib2.ProxyHandler({ 'http' : self._conf.http_proxy }))
-            
-        if self._conf.https_proxy:
-            proxy_list.append(urllib2.ProxyHandler({'https': self._conf.https_proxy }))
-            
-        opener = urllib2.build_opener(*proxy_list)
-        
-        self._log('--- using http_proxy : {0}', self._conf.http_proxy)
-        self._log('--- using https_proxy: {0}', self._conf.https_proxy)
-        
-        urllib2.install_opener(opener)
-        
-        # plug in filter settings from postfilter
-        self._conf.__setattr__('filters', Config.get().postfilter.filters)
-    
-    def _required_lists(self):
-        """
-        Collect required lists.
-        
-        This method will scan the configured filters and host definitions
-        and create a nested tree mapping lists to hosts.
-        
-        Args:
-            --
-        
-        Returns:
-            A dict containing a tree style representation of all lists:
-            
-            {
-                'list.host1.tld' : {
-                    'nntp.group.1' : [ 'list-name-1' : None ],
-                    'nntp.group.2' : [ 'list-name-2' : None ],
-                }
-            }
-        """
-
-        lists = {}
-        
-        for f in self._conf.filters:
-            if not 'from' in f or \
-               not 'nntp' in f:
-                continue
-        
-            filter_list = f['from'].split('@')[0]
-            filter_host = f['from'].split('@')[-1]
-            filter_desc = f.get('desc', None)
-            
-            match = False
-            for listinfo in self._conf.listinfo:
-                if not 'host' in listinfo or \
-                   not 'info' in listinfo:
-                    continue
-             
-                if filter_host == listinfo['host']:
-                
-                    if not listinfo['host'] in lists:
-                        lists[listinfo['host']] = {}
-                    
-                    lists[listinfo['host']][f['nntp']] = [ filter_list,
-                                                           filter_desc ]
-                    match = True
-                    break
-            
-            if not match:
-                if not 'unassigned' in lists:
-                    lists['unassigned'] = {}
-                
-                lists['unassigned'][f['nntp']] = [ filter_list,
-                                                   filter_desc ]
-        return lists
-    
-    def _fetch_listinfo(self, url):
-        """
-        Fetch a listinfo page as a BeautifulSoup tree.
-
-        This method will try to fetch the supplied URL and on success
-        return a BeautifulSoup tree ready for processing.
-
-        Args:
-            url: A URL containig a mailman listinfo page
-
-        Returns:
-            A parse tree as returned by BeautifulSoup() or None on error.
-        """
-        try:
-            data = urllib2.urlopen(url)
-            return BeautifulSoup(data)
-
-        except urllib2.HTTPError, eh:
-            self._log('!!! failed to fetch "{0}": {1}', url, str(eh))
-            return None
-            
-        except urllib2.URLError, eu:
-            self._log('!!! failed to fetch "{0}": {1}', url, str(eu))
-            return None
-        
-        except StopParsing, sp:
-            self._log('!!! even BeautifulSoup can\'t parse "{0}": {1}',
-                      url, str(sp))
-        
-        # never reached.
-        return None
-    
-    def _collect_descriptions(self):
-        """
-        Update list descriptions from mailman listinfo pages.
-        
-        This method will:
-            
-            - fetch and parse all configured mailman lists,
-            - parse the contained list names and descriptions,
-            - complete the tree returned by :meth:_required_lists() as needed
-            
-        Args:
-            --
-            
-        Returns:
-            A tree like :meth:_required_lists() but with additional
-            descriptions for each list.
-        """
-        lists = self._required_lists()
-        
-        for host in lists:
-            if host == 'unassigned':
-                continue
-            
-            self._log('--- attempting to fetch listinfo for "{0}"...',
-                      host)
-            
-            for li in self._conf.listinfo:
-                if not 'host' in li or \
-                   not 'info' in li:
-                    continue
-                
-                if li['host'] == host:
-                    url = li['info']
-                    break
-            
-            if not url:
-                self._log('!!! no url for host "{0}"', host)
-                continue
-            
-            soup = self._fetch_listinfo(url)
-            
-            if not soup:
-                continue
-            
-            for newsgroup in lists[host]:
-                (name, desc) = lists[host][newsgroup]
-                
-                if desc:
-                    self._log('--- using supplied description for newsgroup "{0}"',
-                              newsgroup)
-                    continue
-                    
-                service_url = '{0}/{1}'.format(url, name)
-                self._log('--- looking for listinfo containing "{0}"', 
-                          service_url, verbosity=3)
-                
-                tag = soup.find('a', href=service_url)
-                
-                if not tag:
-                    self._log('!!! no entry for newsgroup "{0}"', newsgroup)
-                    continue
-                
-                tag = tag.findNext('td')
-                
-                if not tag:
-                    self._log('!!! malformed entry for newsgroup "{0}"', newsgroup)
-                    continue
-                
-                self._log('--- group: "{0}", descr: "{1}"',
-                          newsgroup, tag.text, verbosity=2)
+        Config.add_option('-j', '--jobs',
+                          dest='jobs',
+                          help='comma seperated list of jobs to execute',
+                          action='store',
+                          default='',
+                          metavar='JOBS')
                           
-                lists[host][newsgroup] = [name, tag.text]
-            
-        return lists
-    
+        Config.add_option('', '--help-jobs',
+                          dest='show_help',
+                          help='print help for installed jobs',
+                          action='store_true',
+                          default=False)
+        
+        self._conf = Config.get().imp
+        
+        self._show_help = Config.get().options.show_help
+        if Config.get().options.jobs:
+            self._jobs = Config.get().options.jobs.split(',')
+        else:
+            self._jobs = []
+        
+        if self._show_help:
+            self._conf.verbose = False
+        
     def run(self):
+        if self._show_help:
+            # extra printout, --help-plugins disables _log()
+            print('Installed jobs:')
+        
         self._log('--- begin')
-        lists = self._collect_descriptions()
+        self._log('--- loading plugins:')
+        plugin_path = [os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  'plugins'),
+                       self._conf.plugin_dir]
         
-        self._log('--- updating "{0}"', self._conf.newsgroups)
-        try:
-            newsgroups = open(self._conf.newsgroups, 'r')
-            lines = newsgroups.readlines()
-            newsgroups.close()
+        for p in plugin_path:
+            if not os.path.exists(p):
+                self._log('!!! skipping  "{0}" - no such file or directory'.format(p))
+                continue
             
-            newsgroups = open(self._conf.newsgroups, 'w')
-            for line in lines:
-                line = line.strip()
+            sys.path.append(p)
+            
+            for (importer, name, ispkg) in pkgutil.walk_packages([p]):
+                if name.startswith('ImpJob'):
+                    try:
+                        __import__(name)
+                    except Exception, e:
+                        self._log('!!! unable to import "{0}": {1}: {2}'.format(
+                                  name, e.__class__.__name__, e))
+        
+        if 'LOADED_JOBS' in dir(Imp):
+            for plugin in Imp.LOADED_JOBS:
+                self._log('--- loaded plugin "{0}"'.format(plugin.__name__),
+                          verbosity=2)
+        
+        
+            for plugin in Imp.LOADED_JOBS:
+                if self._jobs and (not plugin.__name__ in self._jobs):
+                    continue
                 
-                group = line.split(' ', 1)[0].split('\t')[0].strip()
-                match = False
-                for host in lists:
-                    if group in lists[host]:
-                        
-                        if not lists[host][group][1]:
-                            del lists[host][group]
-                            break
-                        
-                        if isinstance(lists[host][group][1], unicode):
-                            lists[host][group][1] = lists[host][group][1].encode('UTF-8')
-                        
-                        self._log('--- updt: {0}\t\t{1}', 
-                                  group, lists[host][group][1], verbosity=3)
-                        
-                        newsgroups.write('{0}\t\t{1}\n'.format(
-                                         group, lists[host][group][1]))
-                        
-                        del lists[host][group]
-                        
-                        match = True
-                        break
-                        
-                if not match:
-                    self._log('--- keep: {0}', line, verbosity=3)
-                    newsgroups.write(line + '\n')
-            
-            # aftermath
-            for host in lists:
-                for group in lists[host]:
-                    if isinstance(lists[host][group][1], unicode):
-                        lists[host][group][1] = lists[host][group][1].encode('UTF-8')
+                try:
+                    inst = plugin()
                     
-                    self._log('--- +new: {0}\t\t{1}',
-                              group, lists[host][group][1] or '<None>', verbosity=3)
+                    if self._show_help:
+                        print '-- {0}:'.format(plugin.__name__)
+                        inst.show_help(Config.get().optargs)
+                        del inst
+                        continue
                     
-                    if lists[host][group][1]:
-                        newsgroups.write('{0}\t\t{1}\n'.format(
-                                        group, lists[host][group][1]))
-                    else:
-                        # don't record {groupname}\t\tNone
-                        newsgroups.write('{0}\t\t\n'.format(group))
-            
-            newsgroups.close()
-            self._log('--- update done.')
-            self._log('--- end')
-            return 0
+                    do_run = inst.needs_run(Config.get().optargs)
+                    self._log('--- {0}.needs_run() ='.format(plugin.__name__, do_run))
+                    
+                    if do_run:
+                        self._log('--- executing job "{0}"'.format(plugin.__name__))
+                        res = inst.run()
+                        self._log('--- job result: {0}'.format(res))
+                    del inst
+                except Exception, e:
+                        self._log('!!! uncaught exception {0}: {1}'.format(
+                                  e.__class__.__name__, e))
+        self._log('--- end')
+        return 0
+
+class _ImpJobMeta(type):
+    """
+    Metaclass featuring automatic registration for ImpJob subclasses.
+    """
+    def __init__(cls, name, bases, dict):
+        if not 'LOADED_JOBS' in Imp.__dict__:
+            setattr(Imp, 'LOADED_JOBS', [])
+
+        if (not name == 'ImpJob') and (not cls in Imp.LOADED_JOBS):
+            Imp.LOADED_JOBS.append(cls)
+
+        super(type, _ImpJobMeta).__init__(name, bases, dict)
+
+class ImpJob(FUCore):
+    """
+    An abstract job
+
+    | ImpJob provides the base for custom SynFU oriented jobs.
+    | Any derived subclass will be registered as a new job uppon import.
+    """
+    __metaclass__ = _ImpJobMeta
+
+    def _log(self, message, *args, **kwargs):
+        """
+        | Log a message using :mod:`syslog` as well as :attr:`sys.stdout`.
+        | Messages will be prefixed using the current *__class__.__name__*.
         
-        except IOError, e:
-            self._log('!!! failed to update "{0}": {1}'.format(
-                      self._conf.newsgroups,
-                      str(e)))
-            self._log('--- end')
-            return 1
+        :param   message: The pre-formatted logmessage.
+        :param       rec: Optional recursion level used to indent messages.
+        :param verbosity: Minimal verbosity required to display this message.
+        :returns: :const:`None`
+        """
+        if len(message) >= 4 and message[0] == message[1] == message[2]:
+            tags    = message[:4]
+            message = message[4:]
+        else:
+            tags    = '--- '
+            
+        if isinstance(message, unicode):
+            message = '{0}{1}: {2}'.format(tags, self.__class__.__name__, message.encode('UTF-8'))
+        else:
+            message = '{0}{1}: {2}'.format(tags, self.__class__.__name__, message)
+        
+        super(ImpJob, self)._log(message, *args, **kwargs)
+
+    def job_config(self, name, defaults={}):
+        """
+        Load job specific config object.
+        
+        | This method will try to load a subsection of the Imp-configuration.
+        | The optional dictionary *defaults* contains a list of default key,value pairs.
+        
+        :param: name: The name of the config subsection beneath Imp.jobs
+        :param: defaults: A :const:`dict` with key,value pairs for default parameters
+        :return: A JobConf instance with all toplevel settings converted to attributes.
+        """
+        class JobConf(object):
+            pass
+            
+        conf = JobConf()
+        imp  = Config.get().imp
+        
+        defaults.update(getattr(imp, 'jobs', {}).get(name, {}))
+        
+        for k,v in defaults.items():
+            setattr(conf, k, v)
+        
+        setattr(conf, 'verbose'  , imp.verbose)
+        setattr(conf, 'verbosity', imp.verbosity)
+        
+        return conf
+        
+    def show_help(self, *args):
+        """
+        Print the available commandline options for this job.
+        
+        :params: \*args: the list of commandline arguments (suitable for use by :mod:`optparse`)
+        :returns: None
+        
+        .. note::
+        
+            You should really overwrite this one ;)
+        """
+        print('\tThe author of this job was to lazy to provide a real help.')
+    
+    def needs_run(self, *args):
+        """
+        Check run status.
+
+        | This method will be called by :class:`Imp` to check if this job needs to be run.
+        | The final decission is up to the job and determined by the returncode.
+
+        :params: \*args: the list of commandline arguments (suitable for use by :mod:`optparse`)
+        :returns: :const:`True` if the job needs to be run
+        """
+        return False
+
+    def run(self):
+        """
+        Execute the job
+
+        | This method will be called on a successfull call to :meth:`needs_run`.
+        | On success the job should return :const:`True`, :const:`False` otherwise.
+
+        :returns: :const:`True` on success
+        :returns: :const:`False` on failure
+
+        .. note::
+
+            Imp will wrap job execution in a catch-all try-block.
+            However it is considered good practice to care for possible exceptions.
+        """
+        return False
+
 
 
 def ImpRun():
