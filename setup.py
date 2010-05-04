@@ -32,7 +32,7 @@ Created by René Köcher on 2009-12-19.
 from setuptools import setup, find_packages
 import sys, os
 
-version='0.4.9'
+version='0.4.11'
 
 setup(name='SynFU',
       version=version,
@@ -40,13 +40,15 @@ setup(name='SynFU',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-        'PyYAML > 3.08'
+        'PyYAML > 3.08',
+        'BeautifulSoup < 3.1.0'
       ],
       entry_points={
         'console_scripts' : [
             'synfu-reactor = synfu.reactor:ReactorRun',
             'synfu-mail2news = synfu.postfilter:FilterMail2News',
-            'synfu-news2mail = synfu.postfilter:FilterNews2Mail'
+            'synfu-news2mail = synfu.postfilter:FilterNews2Mail',
+            'synfu-imp       = synfu.imp:ImpRun'
         ],
       },
       test_suite="tests.suite"

@@ -64,11 +64,12 @@ Supported configuration
 	================ ================== ============
 	outlook_hacks    yes / no           Filter outlook tags for RE:, FWD: etc. and replace them with RFC tags.
 	complex_footer   yes / no           Switch between simple mailman and generic mailing list signature filter.
-	strip_notes      yes / no           Blaa...             
+	strip_notes      yes / no           Remove additional "This is a XY signed message" notes.
 	verbose          yes / no           Enable logging to syslog.
 	verbosity        0 - 999            Set log verbosity (0 = no logging)
 	================ ================== ============
 
+.. _synfu-postfilter:
 
 SynFu.Postfilter
 ----------------
@@ -169,7 +170,7 @@ Supported configuration
 	verbosity      0 - 999            Set log verbosity (0 = no logging)
 	default_sender mail address       The default Sender: used by mail2news.
 	mail2news_cmd  shell command      Command used by mail2news to deploy messages to NNTP.
-	news2mail_cmd  shell commond      Command used by news2mail to deplay messages to mailing lists.
+	news2mail_cmd  shell command      Command used by news2mail to deploy messages to mailing lists.
 	filters        list of filters    See the following table for details.
 	============== ================== ===========
 
@@ -189,6 +190,83 @@ The following parameters are recognized in a filter definition:
 	force_tag      string             [*optional*] Force List-Tag for :ref:`synfu-reactor`.
 	broken_auth    yes / no           [*optional*] Some lists expect From: and Sender: tags to match..
 	============== ================== ===========
+
+.. _synfu-imp:
+
+SynFU.Imp
+----------
+
+Imp provides a flexible, plugin based framework for task scheduling and background processing.
+Jobs are implemented as python classes deriving from :class:`ImpJob` and are
+spool directory which will be scanned on launch.
+
+Jobs are loaded and processed in alphabetical order following these steps:
+
+	* load job plugins
+	* initialize job objects
+	* check the jobs run status
+	* execute the job (if needed)
+	* report results
+	
+
+If the :option:`--jobs` parameter is provided only the listed will be executed.
+
+Synopsis
+..........
+
+:command:`synfu-imp`
+
+.. program:: synfu-imp
+
+.. cmdoption:: -c <path/to/synfu.conf>
+
+	Specify path to synfu.conf
+
+.. cmdoption:: --jobs <joblist>
+
+	Attempt to run only tho comma seperated list of jobs
+
+.. cmdoption:: --help-jobs
+
+	List help for installed plugins
+
+.. cmdoption:: --
+
+	Terminate the parameter list and start the list for possible plugin parameters.
+
+Supported configuration
+........................
+
+.. code-block:: yaml
+
+	--- !<tag:news.piratenpartei.de,2010:synfu/imp>
+	settings:
+	   verbose    : yes
+	   verbosity  : 3
+	jobs:
+	   groom_newsgroups:
+	      newsgroups : tests/data/misc/newsgroups
+	      http_proxy : http://host:port
+	      https_proxy: http://host:port
+
+	      listinfo:
+	         - host: lists.piratenpartei.de
+	           info: https://service.piratenpartei.de/mailman/listinfo
+
+
+
+.. table::
+
+	============== ================== ===========
+	parameter      supported values   description
+	============== ================== ===========
+	verbose        yes / no           Enable logging to syslog.
+	verbosity      0 - 999            Set log verbosity (0 = no logging)
+	jobs           dictionary         A dictionary with one group for each plugin
+	============== ================== ===========
+
+The config parameter **jobs** contains a dictionary with options usable by installed plugins.
+A fresh installation contains the group **groom_newsgroups** which represents the default settings for the built-in :ref:`GroomNewsgroups` plugin.
 
 
 .. _`SynCom`: 

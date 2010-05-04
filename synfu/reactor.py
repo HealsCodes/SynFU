@@ -46,7 +46,7 @@ from synfu.fucore import FUCore
     
 class Reactor(FUCore):
     """
-    SynFU reactor implements basic filtering for mailman and other mailinglist
+    SynFU reactor implements basic filtering for mailman and other mailing list
     based messages to suit them better for mail2news purposes.
     """
     
@@ -270,7 +270,7 @@ class Reactor(FUCore):
         what looks like a mailman signature.
         
         For this purpose the content will be scanned according to the
-        specifed configuration (complex_footer: yes|no).
+        specified configuration (complex_footer: yes|no).
         
         Args:
             body: The (decoded) message part including all subparts.

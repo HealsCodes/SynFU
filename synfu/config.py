@@ -96,13 +96,51 @@ class _PostfilterConfig(yaml.YAMLObject):
                 pass
         
         return self
+
+class _ImpConfig(yaml.YAMLObject):
+    yaml_tag = u'tag:news.piratenpartei.de,2010:synfu/imp'
+
+    def __init__(self, **kwargs):
+        super(_FuseConfig, self).__init__()
     
+    def __repr__(self):
+        return '{0}{{ plugins: "{3}" }}'.format(
+               self.__class__.__name__,
+               self.plugin_dir)
+    
+    def configure(self):
+        self.plugin_dir  = self.settings.get('plugin_dir' , '/var/lib/synfu/imp/')
+        self.verbose     = self.settings.get('verbose'  , False)
+        self.verbosity   = self.settings.get('verbosity', 0)
+
+        return self
     
 class Config(object):
     """SynFU global config"""
     
     _sharedConfig = None
+    _parser       = None
     
+    @classmethod
+    def add_option(cls, *args, **kwargs):
+        """
+        .. versionadded:: 0.4.10
+        Add a new option to the global set of parameters.
+        
+        After a call to :meth:`Config.get` the parsed options and arguments will
+        be accessible as :attr:`Config.option` and :attr:`Config.optargs`.
+        
+        :param: \*args: positional arguments to passed to :meth:`optparse.OptionParser.add_option`
+        :param: \**keywords: keyword arguments to passed to :meth:`optpars.OptionParser.add_option`
+        :returns: None
+        """
+        
+        if Config._parser == None:
+            Config._parser = optparse.OptionParser()
+            
+        if args:
+            Config._parser.add_option(*args, **kwargs)
+
     @classmethod
     def get(cls, *args):
         """
@@ -112,11 +150,17 @@ class Config(object):
         :param \*args: optional paths to search for synfu.conf
         :type \*args:  list of strings or None
         :rtype:        :class:`synfu.config.Config`
-        :returns:      an initialezed :class:`synfu.config.Config` instance
+        :returns:      an initialized :class:`synfu.config.Config` instance
         """
         
         if Config._sharedConfig:
             return Config._sharedConfig
+        
+        Config.add_option('-c', '--config',
+                          dest    = 'config_path',
+                          action  = 'store',
+                          default = None,
+                          help    = 'Path to config file')
         
         paths = ['.', '/etc', '/usr/local/etc']
         paths.insert(0, os.path.join(os.getenv('HOME','/'),'.config'))
@@ -124,16 +168,10 @@ class Config(object):
         if args:
             paths = list(args) + paths
         
-        parser = optparse.OptionParser()
-        parser.add_option('-c', '--config',
-                          dest    = 'config_path',
-                          action  = 'store',
-                          default = None,
-                          help    = 'Path to config file')
-                          
-        (opts, args) = parser.parse_args(sys.argv[1:])
+        
+        (opts, args) = Config._parser.parse_args(sys.argv[1:])
         if opts.config_path:
-            paths.append(opts.config_path)
+            paths.insert(0, opts.config_path)
         
         for path in paths:
             try:
@@ -142,7 +180,7 @@ class Config(object):
                 else:
                     conf_path = path
                 
-                Config._sharedConfig = Config(conf_path)
+                Config._sharedConfig = Config(conf_path, opts, args)
                 
                 return Config._sharedConfig
                 
@@ -151,11 +189,14 @@ class Config(object):
         
         raise RuntimeError('Failed to load synfu.conf')
     
-    def __init__(self, path):
+    def __init__(self, path, options, *optargs):
         super(Config, self).__init__()
 
         self.postfilter = None
         self.reactor    = None
+        self.imp        = None
+        self.options    = options
+        self.optargs    = optargs
         
         with open(path, 'r') as data:
             for k in yaml.load_all(data.read()):
@@ -165,6 +206,9 @@ class Config(object):
                 elif type(k) == _ReactorConfig:
                     self.reactor = k.configure()
                     
+                elif type(k) == _ImpConfig:
+                    self.imp = k.configure()
+                    
                 else:
                     print('What is type(k) == {0} ?'.format(type(k)))
                     
@@ -173,6 +217,8 @@ class Config(object):
             
         if not self.reactor:
             raise RuntimeError('Mandatory reactor config missing.')
+            
+        if not self.imp:
+            raise RuntimeError('Mandatory imp config missing.')
+    
 
-    
-    

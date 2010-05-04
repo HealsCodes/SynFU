@@ -8,3 +8,4 @@ Module APIs
         mods_reactor
         mods_postfilter
         mods_fucore
+        mods_imp
