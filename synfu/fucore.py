@@ -152,7 +152,7 @@ class FUCore(object):
         
         # preffer List-Id if we have it
         elif lid:
-            lid = email.header.decode_header(lid)[0][0]
+            lid = email.header.decode_header(lid)[-1][0]
             tag_base = lid.split('<')[-1].split('.')[0].strip()
 
         elif lp:
