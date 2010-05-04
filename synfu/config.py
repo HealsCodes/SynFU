@@ -150,7 +150,7 @@ class Config(object):
         :param \*args: optional paths to search for synfu.conf
         :type \*args:  list of strings or None
         :rtype:        :class:`synfu.config.Config`
-        :returns:      an initialezed :class:`synfu.config.Config` instance
+        :returns:      an initialized :class:`synfu.config.Config` instance
         """
         
         if Config._sharedConfig:

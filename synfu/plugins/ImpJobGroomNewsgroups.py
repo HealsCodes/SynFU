@@ -48,8 +48,8 @@ class GroomNewsgroups(ImpJob):
     """
     GroomNewsgroups - update newsgroup descriptions via mailman
     
-    This Imp-Job will fetch a list of mailman listinfo pages and
-    update the configured newsgroups-file using the listdescriptions.
+    This Imp-Job will fetch a list of mailman list info pages and
+    update the configured newsgroups-file using the list descriptions.
     """
     
     VERSION = '0.3'
@@ -144,7 +144,7 @@ class GroomNewsgroups(ImpJob):
         return a BeautifulSoup tree ready for processing.
 
         Args:
-            url: A URL containig a mailman listinfo page
+            url: A URL containing a mailman listinfo page
 
         Returns:
             A parse tree as returned by BeautifulSoup() or None on error.

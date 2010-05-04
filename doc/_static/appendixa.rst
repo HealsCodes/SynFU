@@ -46,6 +46,7 @@ and represents a working sample.
               smtp : .*test.lists.piratenpartei.de
               from : test@lists.piratenpartei.de
               force_tag: PPD-HH
+              description : Fixed description for GroomNewsgroups
 
             - nntp : pirates.de.talk.politik.etc.pflege
               smtp : .*ag-pflege.lists.piratenpartei.de
@@ -93,4 +94,18 @@ and represents a working sample.
               from : ankuendigungen@lists.piratenpartei-sh.de
               sender: mail2news@nordpiraten.de
 
-        ...
+    --- !<tag:news.piratenpartei.de,2010:synfu/imp>
+        settings:
+            verbose    : yes
+            verbosity  : 3
+            jobs:
+                groom_newsgroups:
+                    newsgroups : tests/data/misc/newsgroups
+    #                http_proxy : http://host:port
+    #                https_proxy: http://host:port
+
+                    listinfo:
+                        - host: lists.piratenpartei.de
+                          info: https://service.piratenpartei.de/mailman/listinfo
+
+...

@@ -24,19 +24,21 @@ Configuration
 --------------
 
 Configuration is done in the file :download:`synfu.conf`.
-This file contains two YAML_ streams defining the settings
-for :ref:`synfu-reactor` as well as :ref:`synfu-news2mail`/:ref:`synfu-mail2news`.
+This file contains three YAML_ streams defining the settings
+for :ref:`synfu-reactor` as well as :ref:`synfu-news2mail`/:ref:`synfu-mail2news` and :ref:`synfu-imp`.
 
 Each configuration section starts with a tag in the form:
 
 .. code-block:: yaml
 
-	--- !<tag:news.piratenpartei.de,2009:synfu/MODULE>
+	--- !<tag:news.piratenpartei.de,YEAR:synfu/MODULE>
 
-With *MODULE* identifying one of the following modules:
+With *YEAR* marking the initial release of a module and *MODULE* identifying
+the specific module:
 
-	- reactor: :ref:`synfu-reactor`
-	- postfilter: :ref:`synfu-mail2news` and :ref:`synfu-news2mail`
+	- reactor: :ref:`synfu-reactor` (year: 2009)
+	- postfilter: :ref:`synfu-mail2news` and :ref:`synfu-news2mail` (year: 2009)
+	- imp: :ref:`synfu-imp` (year: 2010)
 
 Detailed information about the supported options and their possible values can be found in the :ref:`tools` section and a complete example is available in :ref:`appendix-a` .
 
@@ -87,3 +89,14 @@ Once things are in place just add the following line to filter and distribute al
 .. _`python-egg`: http://pypi.python.org/pypi/setuptools
 .. _`yaml`: http://www.yaml.org/
 .. _`procmail`: www.procmail.org/
+
+Task scheduling (via cron)
+-------------------------------
+
+To setup :ref:`synfu-imp` for periodic task execution just add a line like the following to your favorite cron system:
+
+.. code-block:: bash
+
+	# cleanup newsgroups file each day at 11:50pm - cron format
+	50 11 * * * news /usr/bin/synfu-imp --jobs=GroomNewsgroups -- >/dev/null
+

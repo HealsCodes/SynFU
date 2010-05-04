@@ -14,8 +14,9 @@ Contents:
 	_static/intro
 	_static/setup
 	_static/tools
+	_static/plugins
 	_static/api_header
-        _static/appendixa
+	_static/appendixa
 
 Indices and tables
 ==================

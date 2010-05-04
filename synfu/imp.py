@@ -51,10 +51,10 @@ class Imp(FUCore):
     | SynFU Imp is a background helper designed to run periodic maintenance jobs.
     | At the time of this writing the following jobs are built-in:
     
-        - GroomNewsgroups -- update newsgroup descriptions via mailman
+        - :ref:`GroomNewsgroups` -- update newsgroup descriptions via mailman
     
-    | Each job is provided as a seperate python file containing arbitrary
-    | job definitions in the form of :class:`ImpJob` subclasses.
+    | Each job is provided as a separate python file containing arbitrary
+    | job definitions in the form of :class:`synfu.imp.ImpJob` subclasses.
     """
     
     VERSION = '0.3'
@@ -64,7 +64,7 @@ class Imp(FUCore):
         
         Config.add_option('-j', '--jobs',
                           dest='jobs',
-                          help='comma seperated list of jobs to execute',
+                          help='comma separated list of jobs to execute',
                           action='store',
                           default='',
                           metavar='JOBS')
@@ -160,10 +160,10 @@ class _ImpJobMeta(type):
 
 class ImpJob(FUCore):
     """
-    An abstract job
+    An abstract job.
 
     | ImpJob provides the base for custom SynFU oriented jobs.
-    | Any derived subclass will be registered as a new job uppon import.
+    | Any derived subclass will be registered as a new job upon import.
     """
     __metaclass__ = _ImpJobMeta
 
@@ -172,7 +172,7 @@ class ImpJob(FUCore):
         | Log a message using :mod:`syslog` as well as :attr:`sys.stdout`.
         | Messages will be prefixed using the current *__class__.__name__*.
         
-        :param   message: The pre-formatted logmessage.
+        :param   message: The pre-formatted log-message.
         :param       rec: Optional recursion level used to indent messages.
         :param verbosity: Minimal verbosity required to display this message.
         :returns: :const:`None`
@@ -199,7 +199,7 @@ class ImpJob(FUCore):
         
         :param: name: The name of the config subsection beneath Imp.jobs
         :param: defaults: A :const:`dict` with key,value pairs for default parameters
-        :return: A JobConf instance with all toplevel settings converted to attributes.
+        :return: A JobConf instance with all top-level settings converted to attributes.
         """
         class JobConf(object):
             pass
@@ -219,10 +219,10 @@ class ImpJob(FUCore):
         
     def show_help(self, *args):
         """
-        Print the available commandline options for this job.
+        Print the available command line options for this job.
         
-        :params: \*args: the list of commandline arguments (suitable for use by :mod:`optparse`)
-        :returns: None
+        :params: \*args: the list of command line arguments (suitable for use by :mod:`optparse`)
+        :returns: :const:`None`
         
         .. note::
         
@@ -235,9 +235,9 @@ class ImpJob(FUCore):
         Check run status.
 
         | This method will be called by :class:`Imp` to check if this job needs to be run.
-        | The final decission is up to the job and determined by the returncode.
+        | The final decision is up to the job and determined by the return code.
 
-        :params: \*args: the list of commandline arguments (suitable for use by :mod:`optparse`)
+        :params: \*args: the list of command line arguments (suitable for use by :mod:`optparse`)
         :returns: :const:`True` if the job needs to be run
         """
         return False
@@ -246,7 +246,7 @@ class ImpJob(FUCore):
         """
         Execute the job
 
-        | This method will be called on a successfull call to :meth:`needs_run`.
+        | This method will be called on a successful call to :meth:`needs_run`.
         | On success the job should return :const:`True`, :const:`False` otherwise.
 
         :returns: :const:`True` on success

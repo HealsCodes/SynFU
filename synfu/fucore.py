@@ -74,7 +74,7 @@ class FUCore(object):
         """
         Log a message using :mod:`syslog` as well as :attr:`sys.stdout`.
         
-        :param   message: The pre-formatted logmessage.
+        :param   message: The pre-formatted log message.
         :param       rec: Optional recursion level used to indent messages.
         :param verbosity: Minimal verbosity required to display this message.
         :returns: :const:`None`
@@ -129,7 +129,7 @@ class FUCore(object):
             * [X-]List-Id
             * [X-]AF-Envelope-to
             
-        If any of these is found it will be converted into a regula expression
+        If any of these is found it will be converted into a regular expression
         which can be used to remove the List-Tag from arbitrary headers.
         
         :param  message: A :class:`email.message` object.
