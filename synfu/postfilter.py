@@ -294,8 +294,8 @@ class PostFilter(FUCore):
                     sendmail.communicate(str(mm))
                 
                 line = fobj.readline()
-            self._log('--- end')
-            return 0
+        self._log('--- end')
+        return 0
     
 
 def FilterMail2News():
