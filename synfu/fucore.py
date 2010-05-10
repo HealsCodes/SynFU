@@ -38,8 +38,12 @@
 
 """
 
-import sys, re, quopri, syslog
+import sys, os, re, quopri
+import traceback
+import logging
+import logging.handlers
 import email, email.message, email.header
+from logging.handlers import TimedRotatingFileHandler, SysLogHandler
 
 class FUCore(object):
     """
@@ -62,13 +66,62 @@ class FUCore(object):
             (re.compile(r'\b(FWD|WG|WTR|Wtr\.):', re.I), 'Fwd:'),
     ]
 
-    def __init__(self):
+    @classmethod
+    def log_traceback(cls, instance, noreturn=True):
+        """
+        Log the last traceback
+
+        If instance is provided the traceback will be logged to the
+        supplied log_traceback file otherwise syslog will be used.
+
+        :param: instance: a :class:`FUCore` subclass or :const:`None`
+        :param: noreturn: if :const:`True` do a sys.exit(1)
+        """
+
+        logger = logging.getLogger('exception-trap')
+
+        if instance and instance._conf.log_traceback:
+            filename = instance._conf.log_traceback
+            format = '%(asctime)s [%(process)d]: %(levelname)s: %(message)s'
+            handler = logging.FileHandler(filename)
+        else:
+            format = 'SYNFU[%(process)d] %(message)s'
+            handler = SysLogHandler('/dev/log', SysLogHandler.LOG_NEWS)
+
+        formatter = logging.Formatter(format)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
+        for line in traceback.format_exc().splitlines():
+            logger.critical(line)
+
+        if noreturn:
+            sys.exit(1)
+
+    def __init__(self, conf):
         super(FUCore, self).__init__()
 
-        syslog.openlog("SYNFU", syslog.LOG_PERROR | syslog.LOG_NEWS)
-        
-    def __del__(self):
-        syslog.closelog();
+        self._conf = conf
+        self._logger = logging.getLogger(self.__class__.__name__)
+        if self._conf.log_facility == 'file':
+            handler = TimedRotatingFileHandler(self._conf.log_filename,
+                                               self._conf.log_when,
+                                               self._conf.log_interval,
+                                               self._conf.log_keep)
+            if os.path.exists(self._conf.log_filename):
+                # try to fixup rollover time
+                stat = os.stat(self._conf.log_filename)
+                ctime = int(stat.st_ctime)
+                handler.rolloverAt = handler.computeRollover(ctime)
+            format = '%(asctime)s [%(process)d]: %(levelname)s: %(message)s'
+        else:
+            handler = SysLogHandler('/dev/log', SysLogHandler.LOG_NEWS)
+            format = 'SYNFU[%(process)d] %(message)s'
+
+        formatter = logging.Formatter(format)
+        handler.setFormatter(formatter)
+        self._logger.setLevel(logging.DEBUG)
+        self._logger.addHandler(handler)
     
     def _log(self, message, *args, **kwargs):# rec=0, verbosity=1):
         """
@@ -79,7 +132,6 @@ class FUCore(object):
         :param verbosity: Minimal verbosity required to display this message.
         :returns: :const:`None`
         """
-        # _conf.verbose and _conf.verbosity have to be provided by subclasses
         
         verbosity = kwargs.get('verbosity', 1)
         rec       = kwargs.get('rec', 0)
@@ -96,7 +148,17 @@ class FUCore(object):
             if isinstance(message, unicode):
                 message = message.encode('UTF-8')
             
-            syslog.syslog('{0}{1}'.format(' '*rec, message.format(*format_args)))
+            message = '{0}{1}'.format(' '*rec, message.format(*format_args))
+            if verbosity < 2:
+                if message.strip().startswith('!!!'):
+                    self._logger.error(message)
+                else:
+                    self._logger.info(message)
+            else:
+                if message.strip().startswith('!!!'):
+                    self._logger.warning(message)
+                else:
+                    self._logger.debug(message)
     
     def _is_cancel(self, message):
         """
