@@ -56,8 +56,15 @@ class PostFilter(FUCore):
     VERSION = '0.8a'
     NOTICE  = '(c) 2009-2010 Rene Koecher <shirk@bitspin.org>'
     
-    def __init__(self):
-        super(PostFilter, self).__init__()
+    def __init__(self, mode=None):
+        if mode == 'news2mail':
+            Config.get().postfilter.log_filename = \
+                    Config.get().postfilter.log_news2mail
+        elif mode == 'mail2news':
+            Config.get().postfilter.log_filename = \
+                    Config.get().postfilter.log_mail2news
+
+        super(PostFilter, self).__init__(Config.get().postfilter)
         
         self._conf = Config.get().postfilter
 
@@ -302,13 +309,28 @@ def FilterMail2News():
     """
     Global wrapper for setup-tools.
     """
-    filter = PostFilter()
-    sys.exit(filter.mail2news())
+    try:
+        filter = PostFilter(mode='mail2news')
+    except Exception:
+        FUCore.log_traceback(None)
+
+    try:
+        sys.exit(filter.mail2news())
+    except Exception:
+        FUCore.log_traceback(filter)
 
 def FilterNews2Mail():
     """
     Global wrapper for setup-tools.
     """
-    filter = PostFilter()
-    sys.exit(filter.news2mail())
+    try:
+        filter = PostFilter(mode='news2mail')
+    except Exception:
+        FUCore.log_traceback(None)
+
+    try:
+        sys.exit(filter.news2mail())
+    except Exception:
+        FUCore.log_traceback(filter)
+
 

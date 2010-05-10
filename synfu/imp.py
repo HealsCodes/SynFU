@@ -60,8 +60,6 @@ class Imp(FUCore):
     VERSION = '0.3'
     
     def __init__(self):
-        super(Imp, self).__init__()
-        
         Config.add_option('-j', '--jobs',
                           dest='jobs',
                           help='comma separated list of jobs to execute',
@@ -75,6 +73,8 @@ class Imp(FUCore):
                           action='store_true',
                           default=False)
         
+        super(Imp, self).__init__(Config.get().imp)
+
         self._conf = Config.get().imp
         
         self._show_help = Config.get().options.show_help
@@ -166,6 +166,8 @@ class ImpJob(FUCore):
     | Any derived subclass will be registered as a new job upon import.
     """
     __metaclass__ = _ImpJobMeta
+    def __init__(self):
+        super(ImpJob, self).__init__(Config.get().imp)
 
     def _log(self, message, *args, **kwargs):
         """
@@ -265,5 +267,13 @@ def ImpRun():
     """
     Global wrapper for setup-tools.
     """
-    imp = Imp()
-    sys.exit(imp.run())
+    try:
+        imp = Imp()
+    except Exception:
+        FUCore.log_traceback(None)
+
+    try:
+        sys.exit(imp.run())
+    except Exception:
+        FUCore.log_traceback(imp)
+

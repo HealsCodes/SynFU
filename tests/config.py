@@ -45,6 +45,6 @@ class ConfigSuite(unittest.TestCase):
         for (what, path) in self._cfg:
             sys.stderr.write('\n    {0}..'.format(what))
             
-            self.assertRaises(RuntimeError, synfu.config.Config, path)
+            self.assertRaises(RuntimeError, synfu.config.Config, path, {})
             
         sys.stderr.write('\n -- ')
