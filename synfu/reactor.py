@@ -72,7 +72,7 @@ class Reactor(FUCore):
     NOTICE  = '(c) 2009-2010 Rene Koecher <shirk@bitspin.org>'
     
     def __init__(self):
-        super(Reactor, self).__init__()
+        super(Reactor, self).__init__(Config.get().reactor)
         
         self._conf = Config.get().reactor
         self._mm   = email.message_from_file(sys.stdin)
@@ -258,7 +258,6 @@ class Reactor(FUCore):
                         
                 return mm
                 
-        
         return message
     
     def _mutate_part(self, body, rec=0):
@@ -349,5 +348,13 @@ def ReactorRun():
     """
     Global wrapper for setup-tools.
     """
-    reactor = Reactor()
-    reactor.run()
+    try:
+        reactor = Reactor()
+    except Exception:
+        FUCore.log_traceback(None)
+
+    try:
+        reactor.run()
+    except Exception:
+        FUCore.log_traceback(reactor)
+

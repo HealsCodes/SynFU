@@ -45,11 +45,35 @@ except:
 
 import sys, os, optparse, yaml
 
-class _ReactorConfig(yaml.YAMLObject):
+class _FUCoreConfig(yaml.YAMLObject):
+
+    def __init__(self, **kwargs):
+        self.verbose = False
+        self.verbosity = 0
+        self.settings = {}
+        self.log_facility = 'syslog'
+        self.log_filename = '/var/log/synfu.log'
+        self.log_when = 'D'
+        self.log_interval = 1
+        self.log_keep = 14
+        self.log_traceback = None
+        self.settings = {}
+
+    def configure(self):
+        self.verbose = self.settings.get('verbose', False)
+        self.verbosity = self.settings.get('verbosity', 0)
+        self.log_facility = self.settings.get('log_facility', 'syslog')
+        self.log_filename = self.settings.get('log_filename', '/var/log/synfu.log')
+        self.log_traceback = self.settings.get('log_traceback', None)
+        self.log_when = self.settings.get('log_when', 'D')
+        self.log_interval = self.settings.get('log_interval', 1)
+        self.log_keep = self.settings.get('log_keep', 14)
+
+class _ReactorConfig(_FUCoreConfig):
     yaml_tag = u'tag:news.piratenpartei.de,2009:synfu/reactor'
     
     def __init__(self, **kwargs):
-        super(_ReactorConfig, self).__init__()
+        super(_ReactorConfig, self).__init__(**kwargs)
         
     def __repr__(self):
         return '{0}{{ outlook_hacks: {1}, complex_footer: {2}, verbose: {3} }}'.format(
@@ -59,19 +83,18 @@ class _ReactorConfig(yaml.YAMLObject):
                 self.verbose)
 
     def configure(self):
+        super(_ReactorConfig, self).configure()
         self.outlook_hacks  = self.settings.get('outlook_hacks', False)
         self.complex_footer = self.settings.get('complex_footer', False)
         self.strip_notes    = self.settings.get('strip_notes', False)
-        self.verbose        = self.settings.get('verbose', False)
-        self.verbosity      = self.settings.get('verbosity', 0)
         
         return self
 
-class _PostfilterConfig(yaml.YAMLObject):
+class _PostfilterConfig(_FUCoreConfig):
     yaml_tag = u'tag:news.piratenpartei.de,2009:synfu/postfilter'
     
     def __init__(self, **kwargs):
-        super(_PostfilterConfig, self).__init__()
+        super(_PostfilterConfig, self).__init__(**kwargs)
     
     def __repr__(self):
         return '{0}{{ mail2news_cmd: "{1}", filters[{2}] }}'.format(
@@ -80,13 +103,14 @@ class _PostfilterConfig(yaml.YAMLObject):
                 len(self.filters))
     
     def configure(self):
+        super(_PostfilterConfig, self).configure()
         self.mail2news_cmd  = self.settings.get('mail2news_cmd', '/bin/false').strip()
         self.news2mail_cmd  = self.settings.get('news2mail_cmd', '/bin/false').strip()
         self.inn_sm         = self.settings.get('inn_sm'       , '/bin/false').strip()
         self.inn_host       = self.settings.get('inn_host'     , '/bin/false').strip()
-        self.verbose        = self.settings.get('verbose', False)
-        self.verbosity      = self.settings.get('verbosity', 0)
         self.default_sender = self.settings.get('default_sender', None)
+        self.log_mail2news  = self.settings.get('log_mail2news', self.log_filename)
+        self.log_news2mail  = self.settings.get('log_news2mail', self.log_filename)
         
         for e in self.filters:
             try:
@@ -97,11 +121,11 @@ class _PostfilterConfig(yaml.YAMLObject):
         
         return self
 
-class _ImpConfig(yaml.YAMLObject):
+class _ImpConfig(_FUCoreConfig):
     yaml_tag = u'tag:news.piratenpartei.de,2010:synfu/imp'
 
     def __init__(self, **kwargs):
-        super(_FuseConfig, self).__init__()
+        super(_FuseConfig, self).__init__(**kwargs)
     
     def __repr__(self):
         return '{0}{{ plugins: "{3}" }}'.format(
@@ -109,9 +133,8 @@ class _ImpConfig(yaml.YAMLObject):
                self.plugin_dir)
     
     def configure(self):
+        super(_ImpConfig, self).configure()
         self.plugin_dir  = self.settings.get('plugin_dir' , '/var/lib/synfu/imp/')
-        self.verbose     = self.settings.get('verbose'  , False)
-        self.verbosity   = self.settings.get('verbosity', 0)
 
         return self
     
