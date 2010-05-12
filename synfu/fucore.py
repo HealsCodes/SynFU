@@ -112,7 +112,12 @@ class FUCore(object):
                 # try to fixup rollover time
                 stat = os.stat(self._conf.log_filename)
                 ctime = int(stat.st_ctime)
-                handler.rolloverAt = handler.computeRollover(ctime)
+                # work around python 2.6.2 deficiencies.. (not 100% accurate)
+                if sys.hexversion < 0x20603f0:
+                    handler.rolloverAt = ctime + handler.interval
+                else:
+                    handler.rolloverAt = handler.computeRollover(ctime)
+
             format = '%(asctime)s [%(process)d]: %(levelname)s: %(message)s'
         else:
             handler = SysLogHandler('/dev/log', SysLogHandler.LOG_NEWS)
