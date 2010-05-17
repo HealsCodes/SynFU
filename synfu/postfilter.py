@@ -118,6 +118,8 @@ class PostFilter(FUCore):
                 
                 if not match:
                     continue
+            else:
+                self._log('--- post to "{0}"', mapping['nntp'])
             
             cmd_args['NNTP_ID'].append(mapping['nntp'])
             
@@ -146,7 +148,7 @@ class PostFilter(FUCore):
                 
         if cmd_args['NNTP_ID']:
             cmd_args['NNTP_ID'] = ' '.join(cmd_args['NNTP_ID'])
-            
+
             proc = subprocess.Popen(self._conf.mail2news_cmd.format(cmd_args),
                                     shell=True,
                                     stdin=subprocess.PIPE,
