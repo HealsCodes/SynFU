@@ -296,12 +296,27 @@ class FUCore(object):
                         
                     l1 = str(v)
                     
-                    # try to the first occurence of list-tag in l1
+                    # try to remove the first occurence of list-tag in l1
                     l1 = list_tag.sub('', l1)
                     if not l1 == v:
                         have_first_match = True
                         v = l1
                     
+                    if enc is None:
+                        # deal with already decoded headers
+                        for new_enc in ['ascii', 'utf-8', 'latin1']:
+                            try:
+                                v.decode(new_enc)
+                                enc = new_enc
+                                break
+                            except UnicodeDecodeError:
+                                continue
+
+                        if enc is None:
+                            # probably the hardest choice..
+                            v = v.decode('ascii', 'ignore')
+                            enc = 'ascii'
+
                     decoded_hdr[i] = (v, enc)
                 v = str(email.header.make_header(decoded_hdr))
                 
