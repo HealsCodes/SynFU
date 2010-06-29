@@ -355,6 +355,27 @@ class FUCore(object):
                         
                     headers.append(('Message-ID', v))
                     
+            elif k == 'References':
+                # handle References with more than 998 octets
+                decoded_header = email.header.decode_header(v)
+                
+                if len(v) > 998:
+                    v = v.replace('\n', ' ').replace('\t', ' ')
+                    self._log('--- References {0} > 998 octets, shortening', len(v), rec=rec)
+                    match = re.findall('(<[^>]+>)+', v)
+                    if match and len(match) >= 3:
+                        v = [match[0]] + match[-2:]
+                        v = email.header.make_header([(' '.join(v), 'ascii')])
+                        self._log('--- new References: {0}', v, rec=rec, verbosity=2)
+                        
+                        headers.remove(h)
+                        headers.append(('References', v))
+                    elif len(match) < 3:
+                        self._log('!!! References looks broken (HUGE but only two Message-IDs)!')
+                        self._log('match: {0}', match)
+                    else:
+                        self._log('!!! Could not split References into Message-IDs!', rec=rec, verbosity=0)
+                
             # filter headers
             for e in FUCore.HEADER_IGN:
                 if e.match(k):
