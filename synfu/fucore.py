@@ -360,9 +360,9 @@ class FUCore(object):
                 decoded_header = email.header.decode_header(v)
                 
                 if len(v) > 998:
-                    v = v.replace('\n', ' ').replace('\t', ' ')
+                    v = v.replace('\n', '').replace('\t', '').replace(' ', '')
                     self._log('--- References {0} > 998 octets, shortening', len(v), rec=rec)
-                    match = re.findall('(<[^>]+>)+', v)
+                    match = [x.replace('<', '').replace('>', '') for x in v.split('><')]
                     if match and len(match) >= 3:
                         v = [match[0]] + match[-2:]
                         v = email.header.make_header([(' '.join(v), 'ascii')])
