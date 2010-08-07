@@ -285,6 +285,9 @@ class PostFilter(FUCore):
                         if k == 'Newsgroups':
                             mm._headers.remove((k, v))
                             mm._headers.append(('X-Newsgroups', v))
+                        elif k == 'Followup-To':
+                            mm._headers.remove((k, v))
+                            mm._headers.append(('X-Followup-To', v))
                     
                     mm.add_header('X-SynFU-PostFilter', 
                                   PostFilter.NOTICE, version=PostFilter.VERSION)
