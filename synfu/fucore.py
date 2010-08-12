@@ -365,6 +365,7 @@ class FUCore(object):
                     match = [x.replace('<', '').replace('>', '') for x in v.split('><')]
                     if match and len(match) >= 3:
                         v = [match[0]] + match[-2:]
+                        v = ['<{0}>'.format(x) for x in v]
                         v = email.header.make_header([(' '.join(v), 'ascii')])
                         self._log('--- new References: {0}', v, rec=rec, verbosity=2)
                         
