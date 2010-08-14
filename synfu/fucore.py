@@ -359,9 +359,9 @@ class FUCore(object):
                 # handle References with more than 998 octets
                 decoded_header = email.header.decode_header(v)
                 
-                if len(v) > 998:
+                if len(v) + len(k) > 990:
+                    self._log('--- References {0} > 990 octets, shortening', len(v) + len(k), rec=rec)
                     v = v.replace('\n', '').replace('\t', '').replace(' ', '')
-                    self._log('--- References {0} > 998 octets, shortening', len(v), rec=rec)
                     match = [x.replace('<', '').replace('>', '') for x in v.split('><')]
                     if match and len(match) >= 3:
                         v = [match[0]] + match[-2:]
