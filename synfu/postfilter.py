@@ -158,7 +158,7 @@ class PostFilter(FUCore):
             proc.communicate(str(mm))
             proc.wait()
             
-            self._log('--- sendmail returned: {0}', proc.returncode)
+            self._log('--- mail2news_cmd returned: {0}', proc.returncode)
             return proc.returncode
             
         self._log('!!! No matching List-ID for {0}', lid)
