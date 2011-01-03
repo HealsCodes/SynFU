@@ -53,7 +53,7 @@ class PostFilter(FUCore):
     
     """
     
-    VERSION = '0.8a'
+    VERSION = '0.8c'
     NOTICE  = '(c) 2009-2010 Rene Koecher <shirk@bitspin.org>'
     
     def __init__(self, mode=None):
@@ -293,7 +293,22 @@ class PostFilter(FUCore):
                         if k == 'Newsgroups':
                             mm._headers.remove((k, v))
                             mm._headers.append(('X-Newsgroups', v))
-                    
+                            
+                        elif k == 'Followup-To':
+                            mm._headers.remove((k, v))
+                            mm._headers.append(('X-Followup-To', v))
+                            self._log('--- Save X-Followup-To "{0}"', v, verbosity=2)                            
+                            
+                            v = v.strip() # should be one newsgroup
+                            for e in self._conf.filters:
+                                if not 'nntp' in e or \
+                                   not 'from' in e:
+                                   continue
+                                
+                                if e['nntp'] == v and not mm.get('Mail-Followup-To'):
+                                    mm._headers.append(('Mail-Followup-To', e['from']))
+                                    self._log('--- Set Mail-Followup-To to "{0}"', e['from'], verbosity=2)
+
                     if self._conf.use_path_marker:
                         path = mm.get('Path', None)
                         if path is None:
@@ -306,7 +321,7 @@ class PostFilter(FUCore):
                                 self._log('--- adding path marker to existing Path "{0}"'.format(self._conf.path_marker))
                             else:
                                 self._log('!!! Path-Header already contains a valid path_marker!?')
-                    
+
                     mm.add_header('X-SynFU-PostFilter', 
                                   PostFilter.NOTICE, version=PostFilter.VERSION)
                     
