@@ -98,6 +98,14 @@ class PostFilter(FUCore):
         
         tag_hints = []
         
+        if self._conf.use_path_marker:
+            path = mm.get('Path', None)
+            if path is None or not self._conf.path_marker in path.split('!'):
+                self._log('--- No path_marker, processing message..'.format(self._conf.path_marker))
+            else:
+                self._log('--- Message contains a valid path_marker, going to drop it!')
+                return 0;
+        
         for mapping in self._conf.filters:
             
             if not 'exp' in mapping:
@@ -285,6 +293,19 @@ class PostFilter(FUCore):
                         if k == 'Newsgroups':
                             mm._headers.remove((k, v))
                             mm._headers.append(('X-Newsgroups', v))
+                    
+                    if self._conf.use_path_marker:
+                        path = mm.get('Path', None)
+                        if path is None:
+                            mm._headers.append(('Path', self._conf.path_marker))
+                            self._log('--- adding path marker "{0}"'.format(self._conf.path_marker))
+                        else:
+                            if not self._conf.path_marker in path.split('!'):
+                                path.append('!{0}'.format(self._conf.path_marker))
+                                mm.rpelace_header('Path', path)
+                                self._log('--- adding path marker to existing Path "{0}"'.format(self._conf.path_marker))
+                            else:
+                                self._log('!!! Path-Header already contains a valid path_marker!?')
                     
                     mm.add_header('X-SynFU-PostFilter', 
                                   PostFilter.NOTICE, version=PostFilter.VERSION)

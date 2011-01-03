@@ -142,6 +142,8 @@ Supported configuration
 			/usr/lib/news/bin/mailpost -b /tmp -x In-Reply-To:User-Agent -d pirates {0[NNTP_ID]}
 		news2mail_cmd  : |
 			/usr/sbin/sendmail -oi -oem -ee -odq -f "{0[FROM]}" -p "NNTP:{0[HOST]}" {1}
+		use_path_marker : yes
+		path_marker     : host.domain.tld
 	
 	filters:
 	      
@@ -161,18 +163,20 @@ Supported configuration
 
 .. table::
 
-	============== ================== ===========
-	parameter      supported values   description
-	============== ================== ===========
-	inn_sm         filesystem path    Path to INN :command:`sm` binary used by news2mail to fetch messages.
-	inn_host       string             Hostname provided as a replacement pattern in news2mail_cmd.
-	verbose        yes / no           Enable logging to syslog.
-	verbosity      0 - 999            Set log verbosity (0 = no logging)
-	default_sender mail address       The default Sender: used by mail2news.
-	mail2news_cmd  shell command      Command used by mail2news to deploy messages to NNTP.
-	news2mail_cmd  shell command      Command used by news2mail to deploy messages to mailing lists.
-	filters        list of filters    See the following table for details.
-	============== ================== ===========
+	=============== ================== ===========
+	parameter       supported values   description
+	=============== ================== ===========
+	inn_sm          filesystem path    Path to INN :command:`sm` binary used by news2mail to fetch  messages.
+	inn_host        string             Hostname provided as a replacement pattern in news2mail_cmd.
+	verbose         yes / no           Enable logging to syslog.
+	verbosity       0 - 999            Set log verbosity (0 = no logging)
+	default_sender  mail address       The default Sender: used by mail2news.
+	mail2news_cmd   shell command      Command used by mail2news to deploy messages to NNTP.
+	news2mail_cmd   shell command      Command used by news2mail to deploy messages to mailing lists.
+	use_path_marker yes /no            Enable Path-based message filtering in mail2news
+	path_marker     fqdn               Hostname used to mark the Path:-Header
+	filters         list of filters    See the following table for details.
+	=============== ================== ===========
 
 
 The config parameter **filters** contains a list of filter entries with each entry defining the mapping for one mailing list.

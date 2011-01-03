@@ -43,7 +43,7 @@ try:
 except:
     import sre as re
 
-import sys, os, optparse, yaml
+import sys, os, socket, optparse, yaml
 
 class _FUCoreConfig(yaml.YAMLObject):
 
@@ -97,20 +97,23 @@ class _PostfilterConfig(_FUCoreConfig):
         super(_PostfilterConfig, self).__init__(**kwargs)
     
     def __repr__(self):
-        return '{0}{{ mail2news_cmd: "{1}", filters[{2}] }}'.format(
+        return '{0}{{ mail2news_cmd: "{1}", news2mail_cmd: "{2}", filters[{3}] }}'.format(
                 self.__class__.__name__,
                 self.mail2news_cmd,
+                self.news2mail_cmd,
                 len(self.filters))
     
     def configure(self):
         super(_PostfilterConfig, self).configure()
-        self.mail2news_cmd  = self.settings.get('mail2news_cmd', '/bin/false').strip()
-        self.news2mail_cmd  = self.settings.get('news2mail_cmd', '/bin/false').strip()
-        self.inn_sm         = self.settings.get('inn_sm'       , '/bin/false').strip()
-        self.inn_host       = self.settings.get('inn_host'     , '/bin/false').strip()
-        self.default_sender = self.settings.get('default_sender', None)
-        self.log_mail2news  = self.settings.get('log_mail2news', self.log_filename)
-        self.log_news2mail  = self.settings.get('log_news2mail', self.log_filename)
+        self.mail2news_cmd   = self.settings.get('mail2news_cmd', '/bin/false').strip()
+        self.news2mail_cmd   = self.settings.get('news2mail_cmd', '/bin/false').strip()
+        self.inn_sm          = self.settings.get('inn_sm'       , '/bin/false').strip()
+        self.inn_host        = self.settings.get('inn_host'     , '/bin/false').strip()
+        self.default_sender  = self.settings.get('default_sender', None)
+        self.log_mail2news   = self.settings.get('log_mail2news', self.log_filename)
+        self.log_news2mail   = self.settings.get('log_news2mail', self.log_filename)
+        self.use_path_marker = self.settings.get('use_path_marker', False)
+        self.path_marker     = self.settings.get('path_marker', socket.gethostname()).strip()
         
         for e in self.filters:
             try:
