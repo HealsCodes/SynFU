@@ -87,7 +87,7 @@ class _ReactorConfig(_FUCoreConfig):
         self.outlook_hacks  = self.settings.get('outlook_hacks', False)
         self.complex_footer = self.settings.get('complex_footer', False)
         self.strip_notes    = self.settings.get('strip_notes', False)
-        
+        self.fix_dateline   = self.settings.get('fix_dateline', False)
         return self
 
 class _PostfilterConfig(_FUCoreConfig):

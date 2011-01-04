@@ -65,7 +65,47 @@ class FUCore(object):
             (re.compile(r'\b(AW|R|REPLY|ANTWORT):' , re.I), 'Re:'),
             (re.compile(r'\b(FWD|WG|WTR|Wtr\.):', re.I), 'Fwd:'),
     ]
-
+    
+    TZ_EXP = re.compile(r'(^[^+-]*)(([+-]\d{4})\s*\([^)]*\)).*$')
+    
+    TZ_OFFSETS = {
+        '-1200' : 'IDLW',
+        '-1100' : 'BST',
+        '-1030' : 'HST',
+        '-1000' : 'CAT',
+        '-0900' : 'YST',
+        '-0800' : 'PST',
+        '-0700' : 'MST',
+        '-0600' : 'CST',
+        '-0500' : 'CDT',
+        '-0400' : 'EDT',
+        '-0330' : 'NST',
+        '-0300' : 'GST',
+        '-0200' : 'AT',
+        '-0100' : 'WAT',
+        '-0000' : 'WET',
+        '+0000' : 'GMT',
+        '+0100' : 'CET',
+        '+0200' : 'EET',
+        '+0300' : 'BT',
+        '+0330' : 'IT',
+        '+0400' : 'ZP4',
+        '+0500' : 'ZP5',
+        '+0530' : 'IST',
+        '+0600' : 'NST',
+        '+0700' : 'SST',
+        '+0730' : 'JT',
+        '+0800' : 'CCT',
+        '+0830' : 'MT',
+        '+0900' : 'JST',
+        '+0930' : 'CAST',
+        '+1000' : 'EAST',
+        '+1030' : 'CADT',
+        '+1100' : 'EADT',
+        '+1130' : 'NZT',
+        '+1200' : 'IDLE',
+        '+1300' : 'NZTD'
+    }
     @classmethod
     def log_traceback(cls, instance, noreturn=True):
         """
@@ -247,7 +287,7 @@ class FUCore(object):
         # return 'moab'
         return re.compile('(?i)\s*\[[^]]*(?# This is here to confuse people)\]\s*')
     
-    def _filter_headers(self, list_tag, headers, outlook_hacks=False, rec=0):
+    def _filter_headers(self, list_tag, headers, outlook_hacks=False, fix_dateline=False, rec=0):
         """
         Filter a list of headers according to the global settings.
         
@@ -259,6 +299,9 @@ class FUCore(object):
         
         - if **outlook_hacks** is enabled then outlook-style AW:/FWD:/...
           subjects will be converted to RFC compliant versions
+        
+        - if **fix_dateline** is enabled Date-headers with broken timezone
+          (like those sent by Incredymail) will get their timezone fixed.
         
         - all tags matching :attr:`FUCore.HEADER_IGN` will be discarded
         
@@ -376,7 +419,29 @@ class FUCore(object):
                         self._log('match: {0}', match)
                     else:
                         self._log('!!! Could not split References into Message-IDs!', rec=rec, verbosity=0)
-                
+                        
+            elif k == 'Date' or k == 'X-Date':
+                if fix_dateline:
+                    try:
+                        v.decode('ascii')
+                    except UnicodeDecodeError:
+                        match = FUCore.TZ_EXP.findall(v)
+                        if match:
+                            (time_stamp, old_tz, zone_offset) = match[0]
+                            
+                            if zone_offset in FUCore.TZ_OFFSETS:
+                                v = '{0}{1} ({2})'.format(time_stamp, zone_offset,
+                                                           FUCore.TZ_OFFSETS[zone_offset])
+                                v = email.header.make_header([(v, 'ascii')])
+                                self._log('--- fix Date-header: "{0}" -> "{1}"', h[1], v, rec=rec)
+                            else:
+                                self._log('!!! Unknown timezone {0}, can\t fix it!', rec=rec)
+                            
+                            headers.remove(h)
+                            headers.append(('Date', v))
+                        else:
+                            self._log('!!! Date-header looks invalid and contains no parseable timezone!', rec=rec)
+                        
             # filter headers
             for e in FUCore.HEADER_IGN:
                 if e.match(k):

@@ -164,7 +164,8 @@ class Reactor(FUCore):
         x_mailman = message.get('X-Mailman-Version', None)
         
         message._headers = self._filter_headers(list_tag, message._headers,
-                                                self._conf.outlook_hacks, rec)
+                                                self._conf.outlook_hacks, 
+                                                self._conf.fix_dateline, rec)
         
         if in_reply and not reference and rec == 0:
             # set References: to In-Reply-To: if where in toplevel
