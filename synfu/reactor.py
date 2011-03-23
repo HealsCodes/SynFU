@@ -51,12 +51,12 @@ class Reactor(FUCore):
     """
     
     MAILMAN_SIG = [
-    	re.compile('^https?://service.piratenpartei.de/mailman/[^ ]*$', re.M),
+    	re.compile('^https?://service.piratenpartei.de/listinfo/[^ ]*$', re.M),
     	re.compile('^(__*$|--*$)'),
     ]
     
     MAILMAN_COMPLEX = [
-    	re.compile('^.*https?://.*/mailman/listinfo/[^ ]*$', re.M),
+    	re.compile('^.*https?://.*(/mailman)?/listinfo/[^ ]*$', re.M),
     	re.compile('^(__*$|--*$)'),
     ]
     
