@@ -346,6 +346,12 @@ class FUCore(object):
                         have_first_match = True
                         v = l1
                     
+                    try:
+                        if not enc is None:
+                            v.decode(enc)
+                    except UnicodeDecodeError:
+                        enc = None
+                    
                     if enc is None:
                         # deal with already decoded headers
                         for new_enc in ['ascii', 'utf-8', 'latin1']:
