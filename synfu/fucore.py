@@ -304,6 +304,7 @@ class FUCore(object):
           (like those sent by Incredymail) will get their timezone fixed.
         
         - all tags matching :attr:`FUCore.HEADER_IGN` will be discarded
+          with the exception of X-No-Archive.
         
         :param      list_tag: A :class:`re.SRE_PATTERN` as returned
                               by :meth:`FUCore._find_list_tag`.
@@ -445,6 +446,10 @@ class FUCore(object):
             # filter headers
             for e in FUCore.HEADER_IGN:
                 if e.match(k):
+                    if k.lower() == 'x-no-archive':
+                        self._log('--- keep X-No-Archive: {0}', v, rec=rec, verbosity=2)
+                        continue
+                    
                     self._log('--- remove header "{0}"', k, rec=rec, verbosity=2)
                     
                     headers.remove(h)
