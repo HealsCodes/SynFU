@@ -68,7 +68,7 @@ class Reactor(FUCore):
     
     BROKEN_MULTIPART = re.compile('^Content-Type: [^;]*; boundary=')
     
-    VERSION = '0.3a (based on mutagenX 0.4g)'
+    VERSION = '0.3b (based on mutagenX 0.4g)'
     NOTICE  = '(c) 2009-2010 Rene Koecher <shirk@bitspin.org>'
     
     def __init__(self):
@@ -91,6 +91,12 @@ class Reactor(FUCore):
             SynFu provides the wrapper script *synfu-reactor.py* for this job.
         """
         if (self._is_cancel(self._mm)):
+            sys.exit(0)
+            
+        self._mm  = self._apply_blacklist(self._mm, 'reactor', 0)
+        if not self._mm:
+            # should not happen but who knows?
+            self._log('--- Message was dropped by blacklist')
             sys.exit(0)
         
         self._mm = self._process(self._mm)

@@ -39,6 +39,7 @@
 """
 
 import sys, os, re, quopri
+import time
 import traceback
 import logging
 import logging.handlers
@@ -106,6 +107,9 @@ class FUCore(object):
         '+1200' : 'IDLE',
         '+1300' : 'NZTD'
     }
+    
+    BLACKLIST_MODES = [ 'news2mail', 'mail2news', 'reactor' ]
+    
     @classmethod
     def log_traceback(cls, instance, noreturn=True):
         """
@@ -167,7 +171,41 @@ class FUCore(object):
         handler.setFormatter(formatter)
         self._logger.setLevel(logging.DEBUG)
         self._logger.addHandler(handler)
-    
+        
+        self._blacklist = {}
+        if self._conf.blacklist_filename:
+            try:
+                blacklist_file = open(self._conf.blacklist_filename)
+                for (lno, line) in enumerate(blacklist_file.readlines()):
+                    line = line.strip()
+                    if line.startswith('#'):
+                        continue
+                    fields = [x.strip() for x in line.split(';') if x]
+                    if len(fields) < 2 or len(fields) > 3:
+                        self._log("!!! {0}:{1}: invalid field count {2} expected 2 or 3",
+                                  self._conf.blacklist_filename, lno + 1, len(fields))
+                        continue
+                    elif fields[1].lower() in ['e','ne','en'] and not len(fields) == 3:
+                        self._log('!!! {0}:{1}: invalid field count {2} for rule "{3}"',
+                                  self._conf.blacklist_filename, lno + 1, len(fields), fields[1])
+                        continue
+                    elif not fields[1].lower() in ['d', 'n', 'e', 'ne', 'en']:
+                        self._log('!!! {0}:{1}: invalid rule "{2}"',
+                                  self._conf.blacklist_filename, lno + 1, fields[1])
+                        continue
+                    
+                    if len(fields) == 2:
+                        fields.append(None)
+                    
+                    self._blacklist[fields[0]] = { 'addr' : fields[0],
+                                                   'action' : fields[1],
+                                                   'param' : fields[2] }
+                    self._log('--- blacklist: <addr: {0}>; <action: {1}>; <param: {2}>',
+                              fields[0], fields[1], fields[2], verbosity=3)
+            except IOError, e:
+                self._log('!!! failed to open blacklist file "{0}": {1}',
+                          self._conf.blacklist_filename, str(e))
+            
     def _log(self, message, *args, **kwargs):# rec=0, verbosity=1):
         """
         Log a message using :mod:`syslog` as well as :attr:`sys.stdout`.
@@ -470,3 +508,85 @@ class FUCore(object):
             self._log('!!! had to add a dummy subject', rec=rec)
             
         return headers
+    
+    def _apply_blacklist(self, message, mode, rec=0):
+        """
+        Apply the global blacklist to this message.
+
+        This method will modify the headers of the message or decide to
+        discard the whole message based on the global blacklist.
+
+        :param messag: A :class:`email.message` object.
+        :param mode: One of :attr:`FUCore.BLACKLIST_MODES`
+        :returns: The modified message or None if the message should be dropped.
+        """
+        if not mode.lower() in FUCore.BLACKLIST_MODES:
+            self._log('!!! Invalid blacklist mode "{0}", not modifying message.', mode, rec=rec)
+            return message
+        
+        mfrom = message.get('From', '').split('<')[-1].split('>')[0]
+        sender = message.get('Sender', '').split('<')[-1].split('>')[0]
+        
+        if not mfrom and not msender:
+            self._log('!!! Message has neiter "From:" nor "Sender:" headers!', rec=rec)
+            return message
+        
+        list_entry = self._blacklist.get(mfrom.lower(), self._blacklist.get(sender.lower(), None))
+        if not list_entry:
+            return message
+        
+        self._log('--- applying blacklist rule {0} to message', str(list_entry), rec=rec)
+        
+        if not list_entry['action'].lower() in ['d', 'n', 'e', 'ne', 'en']:
+            # invalid
+            self._log('!!! unsupported blacklist rule "{0}"', list_entry['action'], rec=rec)
+            return message
+        
+        add_expires=False
+        add_xnay=False
+    
+        if list_entry['action'].lower() == 'd' and not mode.lower() == 'reactor':
+            self._log('--- blacklist rule "drop"', rec=rec, verbosity=2)
+            return None
+            
+        elif mode.lower() == 'news2mail':
+            #D=N=E=NE/EN=drop
+            self._log('--- blacklist rule D=N=E=NE/EN "drop"', rec=rec, verbosity=2)
+            return None
+
+        elif mode.lower() == 'mail2news':
+            if list_entry['action'].lower() in ['ne', 'en','n']:
+                add_xnay = True
+            if list_entry['action'].lower() in ['ne', 'en', 'e']:
+                add_expires = True
+
+        elif mode.lower() == 'reactor':
+            if list_entry['action'].lower() in ['ne','en','n','d']:
+                add_xnay = True
+            if list_entry['action'].lower() in ['ne','en','e']:
+                add_expires = True
+
+        if add_xnay:
+            self._log('--- blacklist rule "xnay"', rec=rec, verbosity=2)
+            try:
+                message.replace_header('X-No-Archive', 'yes')
+            except KeyError:
+                message._headers.append(('X-No-Archive', 'yes'))
+                
+        if add_expires:
+            if not list_entry.get('param', None):
+                self._log('!!! blacklist rule "expires" missing a parameter', rec=rec)
+            else:
+                try:
+                    delay=long(list_entry['param'])
+                    expires=time.strftime(r"%d %b %Y %H:%M:%S %z", time.localtime(time.time() + (86400*delay)))
+                    self._log('--- blacklist rule "expires" => {0}', expires, rec=rec, verbosity=2)
+                    try:
+                        message.replace_header('Expires', expires)
+                    except KeyError:
+                        message._headers.append(('Expires', expires))
+                except ValueError:
+                    self.log('!!! blacklist rule "expires" needs a *numeric* parameter.')
+
+        return message
+    

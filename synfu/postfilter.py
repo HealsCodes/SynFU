@@ -53,7 +53,7 @@ class PostFilter(FUCore):
     
     """
     
-    VERSION = '0.8c'
+    VERSION = '0.8d'
     NOTICE  = '(c) 2009-2010 Rene Koecher <shirk@bitspin.org>'
     
     def __init__(self, mode=None):
@@ -85,7 +85,11 @@ class PostFilter(FUCore):
         mm  = email.message_from_string(self._data)
         if (self._is_cancel(mm)):
             return 0
-            
+        mm  = self._apply_blacklist(mm, 'mail2news', 0)
+        if not mm:
+            self._log('--- Message was dropped by blacklist')
+            return 0
+        
         lid = mm.get('List-ID', mm.get('List-Id', None))
         
         if not lid:
@@ -254,6 +258,12 @@ class PostFilter(FUCore):
             message = sm.communicate()[0]
             if message.strip():
                 mm  = email.email.message_from_string(message)
+                mm  = self._apply_blacklist(mm, 'news2mail', 0)
+                if not mm:
+                    self._log('--- Message was dropped by blacklist')
+                    line = fobj.readline()
+                    continue
+                
                 tag = self._find_list_tag(mm)
                 mm._headers = self._filter_headers(tag, mm._headers)
             

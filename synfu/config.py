@@ -57,6 +57,7 @@ class _FUCoreConfig(yaml.YAMLObject):
         self.log_interval = 1
         self.log_keep = 14
         self.log_traceback = None
+        self.blacklist_filename = None
         self.settings = {}
 
     def configure(self):
@@ -68,6 +69,7 @@ class _FUCoreConfig(yaml.YAMLObject):
         self.log_when = self.settings.get('log_when', 'D')
         self.log_interval = self.settings.get('log_interval', 1)
         self.log_keep = self.settings.get('log_keep', 14)
+        self.blacklist_filename = self.settings.get('blacklist_filename', None)
 
 class _ReactorConfig(_FUCoreConfig):
     yaml_tag = u'tag:news.piratenpartei.de,2009:synfu/reactor'
