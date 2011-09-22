@@ -431,6 +431,20 @@ class FUCore(object):
                     have_subject = False
                     
             elif k == 'Message-ID':
+                # fix <message-id
+                if v.strip().startswith('<') and not v.strip().endswith('>'):
+                    self._log('--- appending missing > to Message-ID')
+                    v = v.strip() + '>'
+                    headers.remove(h)
+                    headers.append(('Message-ID', v))
+                    
+                # fix message-id>
+                if v.strip().endswith('>') and not v.strip().startswith('<'):
+                    self._log('--- prepending missing < to Message-ID')
+                    v = '<' + v.strip()
+                    headers.remove(h)
+                    headers.append(('Message-ID', v))
+                    
                 # fix multiple @@ in message id
                 if v.find('@') != v.rfind('@'):
                     # there's more than one of then
