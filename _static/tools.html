@@ -1,0 +1,504 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tools &mdash; SynFU v0.4.11 documentation</title>
+    <link rel="stylesheet" href="sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.4.11',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="underscore.js"></script>
+    <script type="text/javascript" src="doctools.js"></script>
+    <link rel="top" title="SynFU v0.4.11 documentation" href="../index.html" />
+    <link rel="next" title="Plugins" href="plugins.html" />
+    <link rel="prev" title="Setup" href="setup.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="plugins.html" title="Plugins"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="setup.html" title="Setup"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tools</a><ul>
+<li><a class="reference internal" href="#synfu-reactor">SynFU.Reactor</a><ul>
+<li><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li><a class="reference internal" href="#supported-configuration">Supported configuration</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#synfu-postfilter">SynFu.Postfilter</a><ul>
+<li><a class="reference internal" href="#synfu-mail2news">SynFu.Mail2News</a><ul>
+<li><a class="reference internal" href="#id5">Synopsis</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#synfu-news2mail">SynFu.News2Mail</a><ul>
+<li><a class="reference internal" href="#id7">Synopsis</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id8">Supported configuration</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#synfu-imp">SynFU.Imp</a><ul>
+<li><a class="reference internal" href="#id10">Synopsis</a></li>
+<li><a class="reference internal" href="#id11">Supported configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="setup.html"
+                        title="previous chapter">Setup</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="plugins.html"
+                        title="next chapter">Plugins</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/_static/tools.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tools">
+<span id="id1"></span><h1>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="synfu-reactor">
+<span id="id2"></span><h2>SynFU.Reactor<a class="headerlink" href="#synfu-reactor" title="Permalink to this headline">¶</a></h2>
+<p>Reactor provides a flexible approach for mail filtering and preparation. It can be (and for <a class="reference external" href="http://wiki.piratenpartei.de/AG_Parteikommunikation#SynCom">SynCom</a> is) used as a tool to prepare messages for NNTP integration.</p>
+<p>The following features are implemented:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">removal of mailman or &#8216;complex&#8217; signature lines:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">If enabled this feature will detect and remove mailman signatures (inline and MIME-parts).</div>
+<div class="line">In &#8216;complex&#8217; mode possible signature parts will be matched against a set</div>
+<div class="line">of regular expressions which enables arbitrary (multi-multi-line) signatures to be removed.</div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">removal of list-tags in Subject-header:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">If the Subject-header contains a matching list-tag then this tag will be removed.</div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">fix for broken (aka. outlook style) forward and reply tags in Subject-header:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">If enabled subjects containing localized versions of &#8216;RE&#8217; and &#8216;FWD&#8217; will be replaced</div>
+<div class="line">with RFC compliant versions.</div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">fix missing / incorrect Referencing- and In-Reply headers</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">If the message lacks a Referencing-header but provides In-Reply-To,</div>
+<div class="line">then the missing header will be set accordingly.</div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<div class="section" id="synopsis">
+<h3>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h3>
+<p><strong class="command">synfu-reactor</strong></p>
+<dl class="cmdoption">
+<dt id="cmdoption-synfu-reactor-c">
+<tt class="descname">-c</tt><tt class="descclassname"> &lt;path/to/synfu.conf&gt;</tt><a class="headerlink" href="#cmdoption-synfu-reactor-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify path to synfu.conf</p>
+</dd></dl>
+
+</div>
+<div class="section" id="supported-configuration">
+<h3>Supported configuration<a class="headerlink" href="#supported-configuration" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span> <span class="kt">!&lt;tag:news.piratenpartei.de,2009:synfu/reactor&gt;</span>
+<span class="l-Scalar-Plain">settings</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">outlook_hacks</span>  <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+        <span class="l-Scalar-Plain">complex_footer</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+        <span class="l-Scalar-Plain">strip_notes</span>    <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">no</span>
+        <span class="l-Scalar-Plain">verbose</span>        <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+        <span class="l-Scalar-Plain">verbosity</span>      <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">2</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="17%" />
+<col width="68%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">parameter</th>
+<th class="head">supported values</th>
+<th class="head">description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>outlook_hacks</td>
+<td>yes / no</td>
+<td>Filter outlook tags for RE:, FWD: etc. and replace them with RFC tags.</td>
+</tr>
+<tr><td>complex_footer</td>
+<td>yes / no</td>
+<td>Switch between simple mailman and generic mailing list signature filter.</td>
+</tr>
+<tr><td>strip_notes</td>
+<td>yes / no</td>
+<td>Remove additional &#8220;This is a XY signed message&#8221; notes.</td>
+</tr>
+<tr><td>verbose</td>
+<td>yes / no</td>
+<td>Enable logging to syslog.</td>
+</tr>
+<tr><td>verbosity</td>
+<td>0 - 999</td>
+<td>Set log verbosity (0 = no logging)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="synfu-postfilter">
+<span id="id3"></span><h2>SynFu.Postfilter<a class="headerlink" href="#synfu-postfilter" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="synfu-mail2news">
+<span id="id4"></span><h3>SynFu.Mail2News<a class="headerlink" href="#synfu-mail2news" title="Permalink to this headline">¶</a></h3>
+<p>Mail2News provides a drop-in replacement for mail2news.pl provided by the default <a class="reference external" href="http://www.eyrie.org/~eagle/software/inn/">INN</a> installation.
+Since the final command (in the example: <strong class="command">mailpost</strong>) is configurable a theoretical setup could feed messages to virtually any NNTP system.</p>
+<p>Mail2News was designed to filter it&#8217;s output through <a class="reference internal" href="#synfu-reactor"><em>SynFU.Reactor</em></a>.
+While this step is optional Mail2News will provide special List-Tag hints and other useful information to ease the filtering process.</p>
+<div class="section" id="id5">
+<h4>Synopsis<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<p><strong class="command">synfu-mail2news</strong></p>
+<dl class="cmdoption">
+<dt id="cmdoption-synfu-mail2news-c">
+<tt class="descname">-c</tt><tt class="descclassname"> &lt;path/to/synfu.conf&gt;</tt><a class="headerlink" href="#cmdoption-synfu-mail2news-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify path to synfu.conf</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="synfu-news2mail">
+<span id="id6"></span><h3>SynFu.News2Mail<a class="headerlink" href="#synfu-news2mail" title="Permalink to this headline">¶</a></h3>
+<p>News2mail provides a drop-in replacement for news2mail.pl provided by the default <a class="reference external" href="http://www.eyrie.org/~eagle/software/inn/">INN</a> installation.</p>
+<p>By design messages are expected on <tt class="xref py py-const docutils literal"><span class="pre">STDIN</span></tt> and are assumed to have the following format:</p>
+<div class="highlight-python"><pre>@sm-message-token@ listid[, listid[, listid]]</pre>
+</div>
+<p><tt class="xref py py-const docutils literal"><span class="pre">STDIN</span></tt> is processes line by line with an arbitrary number of messages sent per processed line.
+<tt class="xref py py-const docutils literal"><span class="pre">&#64;sm-message-token&#64;</span></tt> will be used to query <tt class="xref py py-attr docutils literal"><span class="pre">inn_sm</span></tt> for the message body, which in turn will be processed.</p>
+<p>Processing involves scanning for List-Tags / List-Ids and replacement / expansion of the Sender-header with the default- or list specific sender.</p>
+<div class="section" id="id7">
+<h4>Synopsis<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
+<p><strong class="command">synfu-news2mail</strong></p>
+<dl class="cmdoption">
+<dt id="cmdoption-synfu-news2mail-c">
+<tt class="descname">-c</tt><tt class="descclassname"> &lt;path/to/synfu.conf&gt;</tt><a class="headerlink" href="#cmdoption-synfu-news2mail-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify path to synfu.conf</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="id8">
+<h3>Supported configuration<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span> <span class="kt">!&lt;tag:news.piratenpartei.de,2009:synfu/postfilter&gt;</span>
+<span class="l-Scalar-Plain">settings</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">inn_sm</span>         <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/usr/lib/news/bin/sm</span>
+        <span class="l-Scalar-Plain">inn_host</span>       <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">news.piratenpartei.de</span>
+        <span class="l-Scalar-Plain">verbose</span>        <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+        <span class="l-Scalar-Plain">verbosity</span>      <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">2</span>
+        <span class="l-Scalar-Plain">default_sender</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mail2news@piratenpartei.de</span>
+        <span class="l-Scalar-Plain">mail2news_cmd</span>  <span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+                <span class="no">/usr/local/bin/synfu-reactor |</span>
+                <span class="no">/usr/lib/news/bin/mailpost -b /tmp -x In-Reply-To:User-Agent -d pirates {0[NNTP_ID]}</span>
+        <span class="l-Scalar-Plain">news2mail_cmd</span>  <span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+                <span class="no">/usr/sbin/sendmail -oi -oem -ee -odq -f &quot;{0[FROM]}&quot; -p &quot;NNTP:{0[HOST]}&quot; {1}</span>
+        <span class="l-Scalar-Plain">use_path_marker</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+        <span class="l-Scalar-Plain">path_marker</span>     <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">host.domain.tld</span>
+
+<span class="l-Scalar-Plain">filters</span><span class="p-Indicator">:</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.region.hh.test</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*test.lists.piratenpartei-hamburg.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">test@piratenpartei-hamburg.de</span>
+        <span class="-Error"> </span><span class="l-Scalar-Plain">sender</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mail2news@nordpiraten.de</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.test</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*test.lists.piratenpartei.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">test@lists.piratenpartei.de</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.talk.politik.etc.pflege</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*ag-pflege.lists.piratenpartei.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ag-pflege@lists.piratenpartei.de</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="17%" />
+<col width="68%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">parameter</th>
+<th class="head">supported values</th>
+<th class="head">description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>inn_sm</td>
+<td>filesystem path</td>
+<td>Path to INN <strong class="command">sm</strong> binary used by news2mail to fetch  messages.</td>
+</tr>
+<tr><td>inn_host</td>
+<td>string</td>
+<td>Hostname provided as a replacement pattern in news2mail_cmd.</td>
+</tr>
+<tr><td>verbose</td>
+<td>yes / no</td>
+<td>Enable logging to syslog.</td>
+</tr>
+<tr><td>verbosity</td>
+<td>0 - 999</td>
+<td>Set log verbosity (0 = no logging)</td>
+</tr>
+<tr><td>default_sender</td>
+<td>mail address</td>
+<td>The default Sender: used by mail2news.</td>
+</tr>
+<tr><td>mail2news_cmd</td>
+<td>shell command</td>
+<td>Command used by mail2news to deploy messages to NNTP.</td>
+</tr>
+<tr><td>news2mail_cmd</td>
+<td>shell command</td>
+<td>Command used by news2mail to deploy messages to mailing lists.</td>
+</tr>
+<tr><td>use_path_marker</td>
+<td>yes /no</td>
+<td>Enable Path-based message filtering in mail2news</td>
+</tr>
+<tr><td>path_marker</td>
+<td>fqdn</td>
+<td>Hostname used to mark the Path:-Header</td>
+</tr>
+<tr><td>filters</td>
+<td>list of filters</td>
+<td>See the following table for details.</td>
+</tr>
+</tbody>
+</table>
+<p>The config parameter <strong>filters</strong> contains a list of filter entries with each entry defining the mapping for one mailing list.
+The following parameters are recognized in a filter definition:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="17%" />
+<col width="70%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">parameter</th>
+<th class="head">supported values</th>
+<th class="head">description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>nntp</td>
+<td>NNTP group id</td>
+<td>Used to map NNTP groups to mailing lists and vice versa.</td>
+</tr>
+<tr><td>smtp</td>
+<td>regular expression</td>
+<td>Used to map mailing lists to NNTP groups and vice versa.</td>
+</tr>
+<tr><td>from</td>
+<td>mail address</td>
+<td>Used in From:-header and supplied as replacement {0[FROM]} in news2mail_cmd</td>
+</tr>
+<tr><td>sender</td>
+<td>mail address</td>
+<td>[<em>optional</em>] Overwrite default_sender on a per-list basis</td>
+</tr>
+<tr><td>force_tag</td>
+<td>string</td>
+<td>[<em>optional</em>] Force List-Tag for <a class="reference internal" href="#synfu-reactor"><em>SynFU.Reactor</em></a>.</td>
+</tr>
+<tr><td>broken_auth</td>
+<td>yes / no</td>
+<td>[<em>optional</em>] Some lists expect From: and Sender: tags to match..</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="synfu-imp">
+<span id="id9"></span><h2>SynFU.Imp<a class="headerlink" href="#synfu-imp" title="Permalink to this headline">¶</a></h2>
+<p>Imp provides a flexible, plugin based framework for task scheduling and background processing.
+Jobs are implemented as python classes deriving from <tt class="xref py py-class docutils literal"><span class="pre">ImpJob</span></tt> and are
+spool directory which will be scanned on launch.</p>
+<p>Jobs are loaded and processed in alphabetical order following these steps:</p>
+<blockquote>
+<div><ul class="simple">
+<li>load job plugins</li>
+<li>initialize job objects</li>
+<li>check the jobs run status</li>
+<li>execute the job (if needed)</li>
+<li>report results</li>
+</ul>
+</div></blockquote>
+<p>If the <em class="xref std std-option">--jobs</em> parameter is provided only the listed will be executed.</p>
+<div class="section" id="id10">
+<h3>Synopsis<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p><strong class="command">synfu-imp</strong></p>
+<dl class="cmdoption">
+<dt id="cmdoption-synfu-imp-c">
+<tt class="descname">-c</tt><tt class="descclassname"> &lt;path/to/synfu.conf&gt;</tt><a class="headerlink" href="#cmdoption-synfu-imp-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify path to synfu.conf</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-synfu-imp--jobs">
+<tt class="descname">--jobs</tt><tt class="descclassname"> &lt;joblist&gt;</tt><a class="headerlink" href="#cmdoption-synfu-imp--jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempt to run only tho comma seperated list of jobs</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-synfu-imp--help-jobs">
+<tt class="descname">--help-jobs</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-synfu-imp--help-jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>List help for installed plugins</p>
+</dd></dl>
+
+<dl class="cmdoption">
+<dt id="cmdoption-synfu-imp--">
+<tt class="descname">--</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-synfu-imp--" title="Permalink to this definition">¶</a></dt>
+<dd><p>Terminate the parameter list and start the list for possible plugin parameters.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="id11">
+<h3>Supported configuration<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span> <span class="kt">!&lt;tag:news.piratenpartei.de,2010:synfu/imp&gt;</span>
+<span class="l-Scalar-Plain">settings</span><span class="p-Indicator">:</span>
+   <span class="l-Scalar-Plain">verbose</span>    <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+   <span class="l-Scalar-Plain">verbosity</span>  <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">3</span>
+<span class="l-Scalar-Plain">jobs</span><span class="p-Indicator">:</span>
+   <span class="l-Scalar-Plain">groom_newsgroups</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">newsgroups</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">tests/data/misc/newsgroups</span>
+      <span class="l-Scalar-Plain">http_proxy</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">http://host:port</span>
+      <span class="l-Scalar-Plain">https_proxy</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">http://host:port</span>
+
+      <span class="l-Scalar-Plain">listinfo</span><span class="p-Indicator">:</span>
+         <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">host</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">lists.piratenpartei.de</span>
+           <span class="l-Scalar-Plain">info</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">https://service.piratenpartei.de/mailman/listinfo</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="24%" />
+<col width="57%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">parameter</th>
+<th class="head">supported values</th>
+<th class="head">description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>verbose</td>
+<td>yes / no</td>
+<td>Enable logging to syslog.</td>
+</tr>
+<tr><td>verbosity</td>
+<td>0 - 999</td>
+<td>Set log verbosity (0 = no logging)</td>
+</tr>
+<tr><td>jobs</td>
+<td>dictionary</td>
+<td>A dictionary with one group for each plugin</td>
+</tr>
+</tbody>
+</table>
+<p>The config parameter <strong>jobs</strong> contains a dictionary with options usable by installed plugins.
+A fresh installation contains the group <strong>groom_newsgroups</strong> which represents the default settings for the built-in <a class="reference internal" href="plugins.html#groomnewsgroups"><em>GroomNewsgroups</em></a> plugin.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="plugins.html" title="Plugins"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="setup.html" title="Setup"
+             >previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, René Köcher.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

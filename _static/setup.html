@@ -1,0 +1,216 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Setup &mdash; SynFU v0.4.11 documentation</title>
+    <link rel="stylesheet" href="sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.4.11',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="underscore.js"></script>
+    <script type="text/javascript" src="doctools.js"></script>
+    <link rel="top" title="SynFU v0.4.11 documentation" href="../index.html" />
+    <link rel="next" title="Tools" href="tools.html" />
+    <link rel="prev" title="Introduction" href="intro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tools.html" title="Tools"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Setup</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a><ul>
+<li><a class="reference internal" href="#integration-with-inn">Integration with INN</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#integration-with-mailman-via-procmail">Integration with Mailman (via Procmail)</a></li>
+<li><a class="reference internal" href="#task-scheduling-via-cron">Task scheduling (via cron)</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="intro.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tools.html"
+                        title="next chapter">Tools</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/_static/setup.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="setup">
+<h1>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>SynFU is distributed as a platform independent <a class="reference external" href="http://pypi.python.org/pypi/setuptools">python-egg</a>.
+You can either download the egg from <a class="reference external" href="http://pypi.python.org">PyPi</a> the Python package index, unpack it and run <strong class="command">setup.py</strong> like this:</p>
+<blockquote>
+<div><p>~/&gt; curl -O <a class="reference external" href="http://pypi.python.org/packages/source/s/synfu/SynFu">http://pypi.python.org/packages/source/s/synfu/SynFu</a>-0.4.11.tar.gz</p>
+<p>~/&gt; tar -xzf SynFu-0.4.11.tar.gz</p>
+<p>~/&gt; cd SynFU-0.4.11</p>
+<p>~/&gt; sudo python ./setup.py install</p>
+</div></blockquote>
+<p>Or simply issue the command <strong class="command">sudo easy_install SynFU</strong>.</p>
+<p>Either way will install SynFU in your python site-packages directory
+and create a set of wrapper scripts in /usr/bin <a class="footnote-reference" href="#id3" id="id1">[1]</a>.</p>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>Configuration is done in the file <a class="reference download internal" href="../_downloads/synfu.conf"><tt class="xref download docutils literal"><span class="pre">synfu.conf</span></tt></a>.
+This file contains three <a class="reference external" href="http://www.yaml.org/">YAML</a> streams defining the settings
+for <a class="reference internal" href="tools.html#synfu-reactor"><em>SynFU.Reactor</em></a> as well as <a class="reference internal" href="tools.html#synfu-news2mail"><em>SynFu.News2Mail</em></a>/<a class="reference internal" href="tools.html#synfu-mail2news"><em>SynFu.Mail2News</em></a> and <a class="reference internal" href="tools.html#synfu-imp"><em>SynFU.Imp</em></a>.</p>
+<p>Each configuration section starts with a tag in the form:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span> <span class="kt">!&lt;tag:news.piratenpartei.de,YEAR:synfu/MODULE&gt;</span>
+</pre></div>
+</div>
+<p>With <em>YEAR</em> marking the initial release of a module and <em>MODULE</em> identifying
+the specific module:</p>
+<blockquote>
+<div><ul class="simple">
+<li>reactor: <a class="reference internal" href="tools.html#synfu-reactor"><em>SynFU.Reactor</em></a> (year: 2009)</li>
+<li>postfilter: <a class="reference internal" href="tools.html#synfu-mail2news"><em>SynFu.Mail2News</em></a> and <a class="reference internal" href="tools.html#synfu-news2mail"><em>SynFu.News2Mail</em></a> (year: 2009)</li>
+<li>imp: <a class="reference internal" href="tools.html#synfu-imp"><em>SynFU.Imp</em></a> (year: 2010)</li>
+</ul>
+</div></blockquote>
+<p>Detailed information about the supported options and their possible values can be found in the <a class="reference internal" href="tools.html#tools"><em>Tools</em></a> section and a complete example is available in <a class="reference internal" href="appendixa.html#appendix-a"><em>Appendix A: Synfu example config</em></a> .</p>
+<p>If you don&#8217;t provide the absolute config path SynFU will search the following places in order:</p>
+<blockquote>
+<div><ul class="simple">
+<li>./synfu.config</li>
+<li>/etc/synfu.config</li>
+<li>/usr/local/etc/synfu.config</li>
+<li>user specifed paths</li>
+</ul>
+</div></blockquote>
+<div class="section" id="integration-with-inn">
+<h3>Integration with INN<a class="headerlink" href="#integration-with-inn" title="Permalink to this headline">¶</a></h3>
+<p>Since <a class="reference internal" href="tools.html#synfu-news2mail"><em>SynFu.News2Mail</em></a> works as a drop-in replacement the only
+changes needed to the INN configuration is the removal of the old
+news2mail line and the addition of the following line to <em>/etc/news/newsfeeds</em>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="c"># Replace the default news2mail line with this one</span>
+synfu:*/!pirates:Tc,Ac,WnN:/usr/local/bin/synfu-news2mail
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="integration-with-mailman-via-procmail">
+<h2>Integration with Mailman (via Procmail)<a class="headerlink" href="#integration-with-mailman-via-procmail" title="Permalink to this headline">¶</a></h2>
+<p>To feed mailing lists through <a class="reference internal" href="tools.html#synfu-mail2news"><em>SynFu.Mail2News</em></a> you need a working <a class="reference external" href="www.procmail.org/">procmail</a> setup <a class="footnote-reference" href="#id4" id="id2">[2]</a>.
+Once things are in place just add the following line to filter and distribute all messages as needed:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="c"># -------------------------------</span>
+<span class="c"># distribute messages using SynFU</span>
+<span class="c"># -------------------------------</span>
+:0 H:mailpost.lock
+| synfu-mail2news
+</pre></div>
+</div>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>The binary directory may vary depending on your OS,
+your distribution and your system configuration.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>The setup and configuration of procmail is beyond the
+scope of this document.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="task-scheduling-via-cron">
+<h2>Task scheduling (via cron)<a class="headerlink" href="#task-scheduling-via-cron" title="Permalink to this headline">¶</a></h2>
+<p>To setup <a class="reference internal" href="tools.html#synfu-imp"><em>SynFU.Imp</em></a> for periodic task execution just add a line like the following to your favorite cron system:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="c"># cleanup newsgroups file each day at 11:50pm - cron format</span>
+50 11 * * * news /usr/bin/synfu-imp --jobs<span class="o">=</span>GroomNewsgroups -- &gt;/dev/null
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tools.html" title="Tools"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, René Köcher.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

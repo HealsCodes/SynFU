@@ -1,0 +1,263 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>synfu.imp.Imp – Periodic Imp - background tasks &mdash; SynFU v0.4.11 documentation</title>
+    <link rel="stylesheet" href="sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.4.11',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="underscore.js"></script>
+    <script type="text/javascript" src="doctools.js"></script>
+    <link rel="top" title="SynFU v0.4.11 documentation" href="../index.html" />
+    <link rel="up" title="Module APIs" href="api_header.html" />
+    <link rel="next" title="Appendix A: Synfu example config" href="appendixa.html" />
+    <link rel="prev" title="synfu.fucore.FUCore – Common utility and helper methods" href="mods_fucore.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="appendixa.html" title="Appendix A: Synfu example config"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mods_fucore.html" title="synfu.fucore.FUCore – Common utility and helper methods"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li>
+          <li><a href="api_header.html" accesskey="U">Module APIs</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mods_fucore.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal"><span class="pre">synfu.fucore.FUCore</span></tt> &#8211; Common utility and helper methods</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="appendixa.html"
+                        title="next chapter">Appendix A: Synfu example config</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/_static/mods_imp.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="synfu-imp-imp-periodic-imp-background-tasks">
+<h1><a class="reference internal" href="#synfu.imp.Imp" title="synfu.imp.Imp"><tt class="xref py py-mod docutils literal"><span class="pre">synfu.imp.Imp</span></tt></a> &#8211; Periodic Imp - background tasks<a class="headerlink" href="#synfu-imp-imp-periodic-imp-background-tasks" title="Permalink to this headline">¶</a></h1>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.4.10.</span></p>
+<span class="target" id="module-synfu.imp"></span><p id="module-imp"><em>Platforms: </em>Unix, MacOS, Windows</p>
+<p><em>Module author: René Köcher &lt;<a class="reference external" href="mailto:shirk&#37;&#52;&#48;bitspin&#46;org">shirk<span>&#64;</span>bitspin<span>&#46;</span>org</a>&gt;</em></p>
+<dl class="class">
+<dt id="synfu.imp.Imp">
+<em class="property">class </em><tt class="descclassname">synfu.imp.</tt><tt class="descname">Imp</tt><a class="headerlink" href="#synfu.imp.Imp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imp - the periodic Imp</p>
+<div class="line-block">
+<div class="line">SynFU Imp is a background helper designed to run periodic maintenance jobs.</div>
+<div class="line">At the time of this writing the following jobs are built-in:</div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="plugins.html#groomnewsgroups"><em>GroomNewsgroups</em></a> &#8211; update newsgroup descriptions via mailman</li>
+</ul>
+</div></blockquote>
+<div class="line-block">
+<div class="line">Each job is provided as a separate python file containing arbitrary</div>
+<div class="line">job definitions in the form of <a class="reference internal" href="#synfu.imp.ImpJob" title="synfu.imp.ImpJob"><tt class="xref py py-class docutils literal"><span class="pre">synfu.imp.ImpJob</span></tt></a> subclasses.</div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="synfu.imp.ImpJob">
+<em class="property">class </em><tt class="descclassname">synfu.imp.</tt><tt class="descname">ImpJob</tt><a class="headerlink" href="#synfu.imp.ImpJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>An abstract job.</p>
+<div class="line-block">
+<div class="line">ImpJob provides the base for custom SynFU oriented jobs.</div>
+<div class="line">Any derived subclass will be registered as a new job upon import.</div>
+</div>
+<dl class="method">
+<dt id="synfu.imp.ImpJob._log">
+<tt class="descname">_log</tt><big>(</big><em>message</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#synfu.imp.ImpJob._log" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line">Log a message using <tt class="xref py py-mod docutils literal"><span class="pre">syslog</span></tt> as well as <tt class="xref py py-attr docutils literal"><span class="pre">sys.stdout</span></tt>.</div>
+<div class="line">Messages will be prefixed using the current <em>__class__.__name__</em>.</div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>message</strong> &#8211; The pre-formatted log-message.</li>
+<li><strong>rec</strong> &#8211; Optional recursion level used to indent messages.</li>
+<li><strong>verbosity</strong> &#8211; Minimal verbosity required to display this message.</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="xref py py-const xref docutils literal"><span class="pre">None</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="synfu.imp.ImpJob.job_config">
+<tt class="descname">job_config</tt><big>(</big><em>name</em>, <em>defaults={}</em><big>)</big><a class="headerlink" href="#synfu.imp.ImpJob.job_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load job specific config object.</p>
+<div class="line-block">
+<div class="line">This method will try to load a subsection of the Imp-configuration.</div>
+<div class="line">The optional dictionary <em>defaults</em> contains a list of default key,value pairs.</div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Param :</th><td class="field-body">name: The name of the config subsection beneath Imp.jobs</td>
+</tr>
+<tr class="field"><th class="field-name">Param :</th><td class="field-body">defaults: A <tt class="xref py py-const docutils literal"><span class="pre">dict</span></tt> with key,value pairs for default parameters</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">A JobConf instance with all top-level settings converted to attributes.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="synfu.imp.ImpJob.show_help">
+<tt class="descname">show_help</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#synfu.imp.ImpJob.show_help" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the available command line options for this job.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Params :</th><td class="field-body">*args: the list of command line arguments (suitable for use by <tt class="xref py py-mod docutils literal"><span class="pre">optparse</span></tt>)</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref py py-const xref docutils literal"><span class="pre">None</span></tt></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You should really overwrite this one ;)</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="synfu.imp.ImpJob.needs_run">
+<tt class="descname">needs_run</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#synfu.imp.ImpJob.needs_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check run status.</p>
+<div class="line-block">
+<div class="line">This method will be called by <tt class="xref py py-class docutils literal"><span class="pre">Imp</span></tt> to check if this job needs to be run.</div>
+<div class="line">The final decision is up to the job and determined by the return code.</div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Params :</th><td class="field-body">*args: the list of command line arguments (suitable for use by <tt class="xref py py-mod docutils literal"><span class="pre">optparse</span></tt>)</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref py py-const xref docutils literal"><span class="pre">True</span></tt> if the job needs to be run</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="synfu.imp.ImpJob.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#synfu.imp.ImpJob.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the job</p>
+<div class="line-block">
+<div class="line">This method will be called on a successful call to <tt class="xref py py-meth docutils literal"><span class="pre">needs_run()</span></tt>.</div>
+<div class="line">On success the job should return <tt class="xref py py-const xref docutils literal"><span class="pre">True</span></tt>, <tt class="xref py py-const xref docutils literal"><span class="pre">False</span></tt> otherwise.</div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref py py-const xref docutils literal"><span class="pre">True</span></tt> on success</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref py py-const xref docutils literal"><span class="pre">False</span></tt> on failure</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Imp will wrap job execution in a catch-all try-block.
+However it is considered good practice to care for possible exceptions.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="appendixa.html" title="Appendix A: Synfu example config"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mods_fucore.html" title="synfu.fucore.FUCore – Common utility and helper methods"
+             >previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li>
+          <li><a href="api_header.html" >Module APIs</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, René Köcher.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,167 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>synfu.config.Config – Shared config storage and parser &mdash; SynFU v0.4.11 documentation</title>
+    <link rel="stylesheet" href="sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.4.11',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="underscore.js"></script>
+    <script type="text/javascript" src="doctools.js"></script>
+    <link rel="top" title="SynFU v0.4.11 documentation" href="../index.html" />
+    <link rel="up" title="Module APIs" href="api_header.html" />
+    <link rel="next" title="synfu.reactor.Reactor – Mailman signature and header filter" href="mods_reactor.html" />
+    <link rel="prev" title="Module APIs" href="api_header.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mods_reactor.html" title="synfu.reactor.Reactor – Mailman signature and header filter"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="api_header.html" title="Module APIs"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li>
+          <li><a href="api_header.html" accesskey="U">Module APIs</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api_header.html"
+                        title="previous chapter">Module APIs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mods_reactor.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">synfu.reactor.Reactor</span></tt> &#8211; Mailman signature and header filter</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/_static/mods_config.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-synfu.config">
+<span id="synfu-config-config-shared-config-storage-and-parser"></span><h1><a class="reference internal" href="#synfu.config.Config" title="synfu.config.Config"><tt class="xref py py-mod docutils literal"><span class="pre">synfu.config.Config</span></tt></a> &#8211; Shared config storage and parser<a class="headerlink" href="#module-synfu.config" title="Permalink to this headline">¶</a></h1>
+<p id="module-config"><em>Platforms: </em>Unix, MacOS, Windows</p>
+<p><em>Module author: René Köcher &lt;<a class="reference external" href="mailto:shirk&#37;&#52;&#48;bitspin&#46;org">shirk<span>&#64;</span>bitspin<span>&#46;</span>org</a>&gt;</em></p>
+<dl class="class">
+<dt id="synfu.config.Config">
+<em class="property">class </em><tt class="descclassname">synfu.config.</tt><tt class="descname">Config</tt><big>(</big><em>path</em>, <em>options</em>, <em>*optargs</em><big>)</big><a class="headerlink" href="#synfu.config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>SynFU global config</p>
+<dl class="classmethod">
+<dt id="synfu.config.Config.add_option">
+<em class="property">classmethod </em><tt class="descname">add_option</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#synfu.config.Config.add_option" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 0.4.10.</span></p>
+<p>Add a new option to the global set of parameters.</p>
+<p>After a call to <tt class="xref py py-meth docutils literal"><span class="pre">Config.get()</span></tt> the parsed options and arguments will
+be accessible as <tt class="xref py py-attr docutils literal"><span class="pre">Config.option</span></tt> and <tt class="xref py py-attr docutils literal"><span class="pre">Config.optargs</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Param :</th><td class="field-body">*args: positional arguments to passed to <tt class="xref py py-meth docutils literal"><span class="pre">optparse.OptionParser.add_option()</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">Param :</th><td class="field-body">**keywords: keyword arguments to passed to <tt class="xref py py-meth docutils literal"><span class="pre">optpars.OptionParser.add_option()</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="synfu.config.Config.get">
+<em class="property">classmethod </em><tt class="descname">get</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#synfu.config.Config.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the shared Config instance (initalizing it as needed).
+For the config syntax in use see <cite>_synfu-config-syntax</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> (<em>list of strings or None</em>) &#8211; optional paths to search for synfu.conf</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#synfu.config.Config" title="synfu.config.Config"><tt class="xref py py-class docutils literal"><span class="pre">synfu.config.Config</span></tt></a></td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">an initialized <a class="reference internal" href="#synfu.config.Config" title="synfu.config.Config"><tt class="xref py py-class docutils literal"><span class="pre">synfu.config.Config</span></tt></a> instance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mods_reactor.html" title="synfu.reactor.Reactor – Mailman signature and header filter"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="api_header.html" title="Module APIs"
+             >previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li>
+          <li><a href="api_header.html" >Module APIs</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, René Köcher.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

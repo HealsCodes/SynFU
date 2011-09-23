@@ -1,0 +1,153 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; SynFU v0.4.11 documentation</title>
+    <link rel="stylesheet" href="sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.4.11',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="underscore.js"></script>
+    <script type="text/javascript" src="doctools.js"></script>
+    <link rel="top" title="SynFU v0.4.11 documentation" href="../index.html" />
+    <link rel="next" title="Setup" href="setup.html" />
+    <link rel="prev" title="Welcome to the Syncom Filter Utils documentation!" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="setup.html" title="Setup"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to the Syncom Filter Utils documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#so-what-is-synfu-all-about">So what is SynFU all about?</a></li>
+<li><a class="reference internal" href="#why-should-i-use-it">Why should I use it?</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Welcome to the Syncom Filter Utils documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="setup.html"
+                        title="next chapter">Setup</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/_static/intro.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="so-what-is-synfu-all-about">
+<h2>So what is SynFU all about?<a class="headerlink" href="#so-what-is-synfu-all-about" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">SynFU (short for <em>SynCom Filter Utilities</em>) is a comprehensive set of easy-to-setup,</div>
+<div class="line">easy-to-use tools for NNTP&lt;&#8211;&gt;Mail two way sync.</div>
+</div>
+<p>The development takes part as a component of the so called <a class="reference external" href="http://wiki.piratenpartei.de/AG_Parteikommunikation#SynCom">SynCom</a> concept developed by Members of the <a class="reference external" href="http://wiki.piratenpartei.de/IT">Bundes-IT</a>, a part of the <a class="reference external" href="http://www.piratenpartei.de/">Piratenpartei Deutschland</a>.</p>
+<p>At the current state SynFU provides three components:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="tools.html#synfu-reactor"><em>SynFU.Reactor</em></a>: a handsome filter for mailing list messages</li>
+<li><a class="reference internal" href="tools.html#synfu-news2mail"><em>SynFu.News2Mail</em></a>: a drop-in replacement for <a class="reference external" href="http://www.eyrie.org/~eagle/software/inn/">INN</a>&#8216;s news2mail.pl</li>
+<li><a class="reference internal" href="tools.html#synfu-mail2news"><em>SynFu.Mail2News</em></a>: a drop-in replacement for <a class="reference external" href="http://www.eyrie.org/~eagle/software/inn/">INN</a>&#8216;s mail2news.pl</li>
+<li><a class="reference internal" href="tools.html#synfu-imp"><em>SynFU.Imp</em></a>: a plugin based task scheduler for periodic jobs</li>
+</ul>
+</div></blockquote>
+<p><a class="reference internal" href="tools.html#synfu-reactor"><em>SynFU.Reactor</em></a> started out as a simple filter to remove mailman signatures from messages before passing them to the <a class="reference external" href="http://www.eyrie.org/~eagle/software/inn/">INN</a> import scripts.
+Soon more and more features where added resulting in a flexible mail filter with the ability to correct many malformed message headers <em>as well</em> as remove mailman and generic mailing list signatures.</p>
+<p><a class="reference internal" href="tools.html#synfu-news2mail"><em>SynFu.News2Mail</em></a> and <a class="reference internal" href="tools.html#synfu-mail2news"><em>SynFu.Mail2News</em></a> where created to supersede the original <a class="reference external" href="http://www.eyrie.org/~eagle/software/inn/">INN</a> scripts news2mail and mail2news.
+They have the benefit of being more configurable and more flexible than their counterparts.</p>
+<p><a class="reference internal" href="tools.html#synfu-imp"><em>SynFU.Imp</em></a> tries to solve the need for maintenance jobs and background processing need by providing a simple plugin-based framework.
+Jobs are written in python, dynamically loaded upon executing imp.</p>
+</div>
+<div class="section" id="why-should-i-use-it">
+<h2>Why should I use it?<a class="headerlink" href="#why-should-i-use-it" title="Permalink to this headline">¶</a></h2>
+<p>SynFU is open source, which means you can download, modify and redistribute the source according to the terms of the <a class="reference external" href="http://opensource.org/licenses/bsd-license.php">Simplified BSD License</a>.</p>
+<p>It provides benefits in performance and configurability while keeping the exposed interface compatible to <a class="reference external" href="http://www.eyrie.org/~eagle/software/inn/">INN</a>.</p>
+<p><strong>*Because, you have the choice to!*</strong></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="setup.html" title="Setup"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to the Syncom Filter Utils documentation!"
+             >previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, René Köcher.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

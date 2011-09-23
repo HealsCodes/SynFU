@@ -1,0 +1,209 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Appendix A: Synfu example config &mdash; SynFU v0.4.11 documentation</title>
+    <link rel="stylesheet" href="sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.4.11',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="underscore.js"></script>
+    <script type="text/javascript" src="doctools.js"></script>
+    <link rel="top" title="SynFU v0.4.11 documentation" href="../index.html" />
+    <link rel="prev" title="synfu.imp.Imp – Periodic Imp - background tasks" href="mods_imp.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mods_imp.html" title="synfu.imp.Imp – Periodic Imp - background tasks"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mods_imp.html"
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">synfu.imp.Imp</span></tt> &#8211; Periodic Imp - background tasks</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/_static/appendixa.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="appendix-a-synfu-example-config">
+<span id="appendix-a"></span><h1>Appendix A: Synfu example config<a class="headerlink" href="#appendix-a-synfu-example-config" title="Permalink to this headline">¶</a></h1>
+<p>The following synfu.conf was taken from a test system
+and represents a working sample.</p>
+<div class="highlight-yaml"><div class="highlight"><pre>    <span class="l-Scalar-Plain">--- !&lt;tag:news.piratenpartei.de,2009:synfu/reactor&gt;</span>
+    <span class="l-Scalar-Plain">settings</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">outlook_hacks</span>  <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+          <span class="l-Scalar-Plain">complex_footer</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+          <span class="l-Scalar-Plain">strip_notes</span>    <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">no</span>
+          <span class="l-Scalar-Plain">verbose</span>        <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+          <span class="l-Scalar-Plain">verbosity</span>      <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">2</span>
+
+    <span class="l-Scalar-Plain">--- !&lt;tag:news.piratenpartei.de,2009:synfu/postfilter&gt;</span>
+    <span class="l-Scalar-Plain">settings</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">inn_sm</span>         <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/usr/lib/news/bin/sm</span>
+          <span class="l-Scalar-Plain">inn_host</span>       <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">news.piratenpartei.de</span>
+          <span class="l-Scalar-Plain">verbose</span>        <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+          <span class="l-Scalar-Plain">verbosity</span>      <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">2</span>
+          <span class="l-Scalar-Plain">default_sender</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mail2news@piratenpartei.de</span>
+          <span class="l-Scalar-Plain">mail2news_cmd</span>  <span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+            <span class="no">/usr/local/bin/synfu-reactor |</span>
+            <span class="no">/usr/lib/news/bin/mailpost -b /tmp -x In-Reply-To:User-Agent -d pirates {0[NNTP_ID]}</span>
+          <span class="l-Scalar-Plain">news2mail_cmd</span>  <span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+            <span class="no">/usr/sbin/sendmail -oi -oem -ee -odq -f &quot;{0[FROM]}&quot; -p &quot;NNTP:{0[HOST]}&quot; {1}</span>
+
+    <span class="l-Scalar-Plain">filters</span><span class="p-Indicator">:</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.region.hh.misc</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*list.hh.aktive</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">aktive@piratenpartei-hamburg.de</span>
+          <span class="l-Scalar-Plain">sender</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mail2news@nordpiraten.de</span>
+          <span class="l-Scalar-Plain">force_tag</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">PPD-HH</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.region.hh.test</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*test.lists.piratenpartei-hamburg.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">test@piratenpartei-hamburg.de</span>
+          <span class="l-Scalar-Plain">sender</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mail2news@nordpiraten.de</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.test</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*test.lists.piratenpartei.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">test@lists.piratenpartei.de</span>
+          <span class="l-Scalar-Plain">force_tag</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">PPD-HH</span>
+          <span class="l-Scalar-Plain">description</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Fixed description for GroomNewsgroups</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.talk.politik.etc.pflege</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*ag-pflege.lists.piratenpartei.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ag-pflege@lists.piratenpartei.de</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.region.nw.ak.gesundheit</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*nrw-ak-gesundheit.lists.piratenpartei.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">nrw-ak-gesundheit@lists.piratenpartei.de</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.talk.politik.etc.pflege</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*ag-pflege.lists.piratenpartei.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ag-pflege@lists.piratenpartei.de</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.talk.politik.etc.gesundheit</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*ag-gesundheitswesen.lists.piratenpartei.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ag-gesundheitswesen@lists.piratenpartei.de</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.region.sn</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*sachsen.lists.piratenpartei.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">sachsen@lists.piratenpartei.de</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.region.he.darmstadt</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*darmstadt.piratenpartei-hessen.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">darmstadt@piratenpartei-hessen.de</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.region.ni.misc</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*aktive-nds.lists.piraten-nds.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">aktive-nds@lists.piraten-nds.de</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.region.ni.braunschweig</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*braunschweig.lists.piratenpartei-niedersachsen.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">bs-piraten@gomex.de</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.region.rp.neustadt</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*rlp-neustadt@lists.piratenpartei.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">rlp-neustadt@lists.piratenpartei.dee</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.region.sh.misc</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*diskurs.lists.piratenpartei-sh.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">diskurs@lists.piratenpartei-sh.de</span>
+          <span class="l-Scalar-Plain">sender</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mail2news@nordpiraten.de</span>
+
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nntp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pirates.de.region.sh.announce</span>
+          <span class="l-Scalar-Plain">smtp</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.*ankuendigungen.lists.piratenpartei-sh.de</span>
+          <span class="l-Scalar-Plain">from</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ankuendigungen@lists.piratenpartei-sh.de</span>
+          <span class="l-Scalar-Plain">sender</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mail2news@nordpiraten.de</span>
+
+<span class="nn">---</span> <span class="kt">!&lt;tag:news.piratenpartei.de,2010:synfu/imp&gt;</span>
+    <span class="l-Scalar-Plain">settings</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">verbose</span>    <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+        <span class="l-Scalar-Plain">verbosity</span>  <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">3</span>
+        <span class="l-Scalar-Plain">jobs</span><span class="p-Indicator">:</span>
+            <span class="l-Scalar-Plain">groom_newsgroups</span><span class="p-Indicator">:</span>
+                <span class="l-Scalar-Plain">newsgroups</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">tests/data/misc/newsgroups</span>
+<span class="c1">#                http_proxy : http://host:port</span>
+<span class="c1">#                https_proxy: http://host:port</span>
+
+                <span class="l-Scalar-Plain">listinfo</span><span class="p-Indicator">:</span>
+                    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">host</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">lists.piratenpartei.de</span>
+                      <span class="l-Scalar-Plain">info</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">https://service.piratenpartei.de/mailman/listinfo</span>
+</pre></div>
+</div>
+<p>...</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mods_imp.html" title="synfu.imp.Imp – Periodic Imp - background tasks"
+             >previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, René Köcher.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

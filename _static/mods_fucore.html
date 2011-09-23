@@ -1,0 +1,240 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>synfu.fucore.FUCore – Common utility and helper methods &mdash; SynFU v0.4.11 documentation</title>
+    <link rel="stylesheet" href="sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.4.11',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="underscore.js"></script>
+    <script type="text/javascript" src="doctools.js"></script>
+    <link rel="top" title="SynFU v0.4.11 documentation" href="../index.html" />
+    <link rel="up" title="Module APIs" href="api_header.html" />
+    <link rel="next" title="synfu.imp.Imp – Periodic Imp - background tasks" href="mods_imp.html" />
+    <link rel="prev" title="synfu.postfilter.PostFilter – Mail2News and back again" href="mods_postfilter.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mods_imp.html" title="synfu.imp.Imp – Periodic Imp - background tasks"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mods_postfilter.html" title="synfu.postfilter.PostFilter – Mail2News and back again"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li>
+          <li><a href="api_header.html" accesskey="U">Module APIs</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mods_postfilter.html"
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">synfu.postfilter.PostFilter</span></tt> &#8211; Mail2News and back again</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mods_imp.html"
+                        title="next chapter"><tt class="docutils literal docutils literal"><span class="pre">synfu.imp.Imp</span></tt> &#8211; Periodic Imp - background tasks</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/_static/mods_fucore.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-synfu.fucore">
+<span id="synfu-fucore-fucore-common-utility-and-helper-methods"></span><h1><a class="reference internal" href="#synfu.fucore.FUCore" title="synfu.fucore.FUCore"><tt class="xref py py-mod docutils literal"><span class="pre">synfu.fucore.FUCore</span></tt></a> &#8211; Common utility and helper methods<a class="headerlink" href="#module-synfu.fucore" title="Permalink to this headline">¶</a></h1>
+<p id="module-fucore"><em>Platforms: </em>Unix, MacOS, Windows</p>
+<p><em>Module author: René Köcher &lt;<a class="reference external" href="mailto:shirk&#37;&#52;&#48;bitspin&#46;org">shirk<span>&#64;</span>bitspin<span>&#46;</span>org</a>&gt;</em></p>
+<dl class="class">
+<dt id="synfu.fucore.FUCore">
+<em class="property">class </em><tt class="descclassname">synfu.fucore.</tt><tt class="descname">FUCore</tt><big>(</big><em>conf</em><big>)</big><a class="headerlink" href="#synfu.fucore.FUCore" title="Permalink to this definition">¶</a></dt>
+<dd><p>FUCore contains the generic code and utility methods shared by both
+<a class="reference internal" href="mods_postfilter.html#synfu.postfilter.PostFilter" title="synfu.postfilter.PostFilter"><tt class="xref py py-class docutils literal"><span class="pre">synfu.postfilter.PostFilter</span></tt></a> and <a class="reference internal" href="mods_reactor.html#synfu.reactor.Reactor" title="synfu.reactor.Reactor"><tt class="xref py py-class docutils literal"><span class="pre">synfu.reactor.Reactor</span></tt></a>.</p>
+<p>All of this methods are private and should only be called by subclasses.</p>
+<dl class="method">
+<dt id="synfu.fucore.FUCore._log">
+<tt class="descname">_log</tt><big>(</big><em>message</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#synfu.fucore.FUCore._log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log a message using <tt class="xref py py-mod docutils literal"><span class="pre">syslog</span></tt> as well as <tt class="xref py py-attr docutils literal"><span class="pre">sys.stdout</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>message</strong> &#8211; The pre-formatted log message.</li>
+<li><strong>rec</strong> &#8211; Optional recursion level used to indent messages.</li>
+<li><strong>verbosity</strong> &#8211; Minimal verbosity required to display this message.</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="xref py py-const xref docutils literal"><span class="pre">None</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="synfu.fucore.FUCore._is_cancel">
+<tt class="descname">_is_cancel</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#synfu.fucore.FUCore._is_cancel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the passed message is a CANCEL message.</p>
+<p>This will try to match <tt class="xref py py-attr docutils literal"><span class="pre">FUCore.CANCEL_EXP</span></tt> against all
+<strong>Control:</strong> headers contained in <em>message</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> &#8211; A <tt class="xref py py-class docutils literal"><span class="pre">email.message</span></tt> object.</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref py py-const xref docutils literal"><span class="pre">True</span></tt> or <tt class="xref py py-const xref docutils literal"><span class="pre">False</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="synfu.fucore.FUCore._find_list_tag">
+<tt class="descname">_find_list_tag</tt><big>(</big><em>message</em>, <em>rec=0</em>, <em>plain=False</em><big>)</big><a class="headerlink" href="#synfu.fucore.FUCore._find_list_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter <em>message</em> for a valid list tag.</p>
+<p>This method will scan the passed in messages headers looking for a hint
+to the used list-tag.</p>
+<p>The following headers will be checked (in order):</p>
+<blockquote>
+<div><ul class="simple">
+<li>X-SynFU-Tags (explicit List-Tags supplied by synfu-news2mail)</li>
+<li>[X-]List-Post</li>
+<li>[X-]List-Id</li>
+<li>[X-]AF-Envelope-to</li>
+</ul>
+</div></blockquote>
+<p>If any of these is found it will be converted into a regular expression
+which can be used to remove the List-Tag from arbitrary headers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>message</strong> &#8211; A <tt class="xref py py-class docutils literal"><span class="pre">email.message</span></tt> object.</li>
+<li><strong>rec</strong> &#8211; Optional recursion level used to indent messages.</li>
+<li><strong>plain</strong> &#8211; If <tt class="xref py py-const xref docutils literal"><span class="pre">True</span></tt> return the plain List-Tag (no regexp)</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Either a <tt class="xref py py-class docutils literal"><span class="pre">re.SRE_PATTERN</span></tt> or a string</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="synfu.fucore.FUCore._filter_headers">
+<tt class="descname">_filter_headers</tt><big>(</big><em>list_tag</em>, <em>headers</em>, <em>outlook_hacks=False</em>, <em>fix_dateline=False</em>, <em>rec=0</em><big>)</big><a class="headerlink" href="#synfu.fucore.FUCore._filter_headers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter a list of headers according to the global settings.</p>
+<p>This method will filter the passed in header list by matching a
+series of expressions and filters to it:</p>
+<ul class="simple">
+<li>if <strong>list_tag</strong> is specified and matched in the <strong>Subject:</strong> header
+it will be removed</li>
+<li>if <strong>outlook_hacks</strong> is enabled then outlook-style AW:/FWD:/...
+subjects will be converted to RFC compliant versions</li>
+<li>if <strong>fix_dateline</strong> is enabled Date-headers with broken timezone
+(like those sent by Incredymail) will get their timezone fixed.</li>
+<li>all tags matching <tt class="xref py py-attr docutils literal"><span class="pre">FUCore.HEADER_IGN</span></tt> will be discarded
+with the exception of X-No-Archive.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>list_tag</strong> &#8211; A <tt class="xref py py-class docutils literal"><span class="pre">re.SRE_PATTERN</span></tt> as returned
+by <tt class="xref py py-meth docutils literal"><span class="pre">FUCore._find_list_tag()</span></tt>.</li>
+<li><strong>headers</strong> &#8211; A list of (key, value) headers</li>
+<li><strong>outlook_hacks</strong> &#8211; If <tt class="xref py py-const xref docutils literal"><span class="pre">True</span></tt> convert AW:/FWD:/... subjects
+to RFC versions.</li>
+<li><strong>rec</strong> &#8211; Optional recursion level used to indent messages.</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The filtered header list.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mods_imp.html" title="synfu.imp.Imp – Periodic Imp - background tasks"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mods_postfilter.html" title="synfu.postfilter.PostFilter – Mail2News and back again"
+             >previous</a> |</li>
+        <li><a href="../index.html">SynFU v0.4.11 documentation</a> &raquo;</li>
+          <li><a href="api_header.html" >Module APIs</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, René Köcher.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
