@@ -11,12 +11,12 @@ Contents:
 .. toctree::
 	:maxdepth: 2
 
-	_static/intro
-	_static/setup
-	_static/tools
-	_static/plugins
-	_static/api_header
-	_static/appendixa
+	static/intro
+	static/setup
+	static/tools
+	static/plugins
+	static/api_header
+	static/appendixa
 
 Indices and tables
 ==================
