@@ -430,32 +430,32 @@ class FUCore(object):
                     # this will force creation of a dummy subject
                     have_subject = False
                     
-            elif k == 'Message-ID':
+            elif k == 'Message-ID' or k == 'Message-Id':
                 # fix <message-id
                 if v.strip().startswith('<') and not v.strip().endswith('>'):
                     self._log('--- appending missing > to Message-ID')
                     v = v.strip() + '>'
                     headers.remove(h)
-                    headers.append(('Message-ID', v))
+                    headers.append((k, v))
                     
                 # fix message-id>
                 if v.strip().endswith('>') and not v.strip().startswith('<'):
                     self._log('--- prepending missing < to Message-ID')
                     v = '<' + v.strip()
                     headers.remove(h)
-                    headers.append(('Message-ID', v))
+                    headers.append((k, v))
                     
                 # fix multiple @@ in message id
                 if v.find('@') != v.rfind('@'):
                     # there's more than one of then
-                    self._log('--- copying Message-ID to X-Message-ID', rec=rec)
+                    self._log('--- copying Message-Id to X-Message-Id', rec=rec)
                     headers.remove(h)
-                    headers.append(('X-Message-ID', v))
+                    headers.append(('X-Message-Id', v))
                     
                     while v.find('@') != v.rfind('@'):
                         v = v.replace('@', '', 1)
                         
-                    headers.append(('Message-ID', v))
+                    headers.append((k, v))
                     
             elif k == 'References':
                 # handle References with more than 998 octets
