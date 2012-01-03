@@ -220,10 +220,25 @@ class GroomNewsgroups(ImpJob):
                     continue
                     
                 service_url = '{0}/{1}'.format(url, name)
+                service_rel_a = ''
+                service_rel_b = ''
+                
+                for (i, part) in enumerate(service_url.replace('://', '__').split('/')):
+                        if part == 'listinfo':
+                                service_rel_a = '/'.join(service_url.replace('://', '__').split('/')[i:])
+                                service_rel_b = i * '../' + service_rel_a
+                
                 self._log('--- looking for listinfo containing "{0}"', 
                           service_url, verbosity=3)
+                self._log('--- listinfo rel_a "{0}"', service_rel_a, verbosity=3)
+                self._log('--- listinfo rel_b "{0}"', service_rel_b, verbosity=3)
                 
                 tag = soup.find('a', href=service_url)
+                
+                if not tag:
+                    tag = soup.find('a', href=service_rel_a)
+                    if not tag:
+                        tag = soup.find('a', href=service_rel_b)
                 
                 if not tag:
                     self._log('!!! no entry for newsgroup "{0}"', newsgroup)
