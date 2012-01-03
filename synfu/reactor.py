@@ -72,11 +72,23 @@ class Reactor(FUCore):
     NOTICE  = '(c) 2009-2010 Rene Koecher <shirk@bitspin.org>'
     
     def __init__(self):
+        
+        Config.add_option('-F', '--filter-only',
+                          dest    = 'filter_only',
+                          action  = 'store_true',
+                          default = False,
+                          help    = 'Apply only header filter')
+        
+        Config.add_option('-K', '--keep-header',
+                          dest    = 'header_whitelist',
+                          action  = 'append',
+                          default = [],
+                          help    = 'Header whitelist (won\'t remove these)')
+        
         super(Reactor, self).__init__(Config.get().reactor)
         
         self._conf = Config.get().reactor
         self._mm   = email.message_from_file(sys.stdin)
-    
     
     def run(self):
         """
@@ -92,20 +104,27 @@ class Reactor(FUCore):
         """
         if (self._is_cancel(self._mm)):
             sys.exit(0)
-            
-        self._mm  = self._apply_blacklist(self._mm, 'reactor', 0)
-        if not self._mm:
-            # should not happen but who knows?
-            self._log('--- Message was dropped by blacklist')
-            sys.exit(0)
         
-        self._mm = self._process(self._mm)
-        self._mm.add_header('X-SynFU-Reactor', 
-                            Reactor.NOTICE, version=Reactor.VERSION)
+        if Config.get().options.filter_only:
+            self._mm._headers = self._filter_headers(re.compile(''), self._mm._headers,
+                                                     self._conf.outlook_hacks, 
+                                                     self._conf.fix_dateline, 0,
+                                                     Config.get().options.header_whitelist)
+
+        else:
+            self._mm  = self._apply_blacklist(self._mm, 'reactor', 0)
+            if not self._mm:
+                # should not happen but who knows?
+                self._log('--- Message was dropped by blacklist')
+                sys.exit(0)
+        
+            self._mm = self._process(self._mm)
+            self._mm.add_header('X-SynFU-Reactor', 
+                                Reactor.NOTICE, version=Reactor.VERSION)
         
         print_out = False
         for p in str(self._mm).split('\n')[1:]:
-            if self._conf.strip_notes:
+            if self._conf.strip_notes and not Config.get().options.filter_only:
                 if Reactor.SIGN_NOTICE[0].match(p) and not print_out:
                     print_out = True
                     continue

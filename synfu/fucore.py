@@ -325,7 +325,7 @@ class FUCore(object):
         # return 'moab'
         return re.compile('(?i)\s*\[[^]]*(?# This is here to confuse people)\]\s*')
     
-    def _filter_headers(self, list_tag, headers, outlook_hacks=False, fix_dateline=False, rec=0):
+    def _filter_headers(self, list_tag, headers, outlook_hacks=False, fix_dateline=False, rec=0, whitelist=[]):
         """
         Filter a list of headers according to the global settings.
         
@@ -350,6 +350,7 @@ class FUCore(object):
         :param outlook_hacks: If :const:`True` convert AW:/FWD:/... subjects
                               to RFC versions.
         :param           rec: Optional recursion level used to indent messages.
+        :param     whitelist: Optional list of header names to keep
         :returns: The filtered header list.
         """
         removed      = 0
@@ -502,10 +503,14 @@ class FUCore(object):
                             self._log('!!! Date-header looks invalid and contains no parseable timezone!', rec=rec)
                         
             # filter headers
+            whitelist = [x.lower() for x in whitelist]
             for e in FUCore.HEADER_IGN:
                 if e.match(k):
                     if k.lower() == 'x-no-archive':
                         self._log('--- keep X-No-Archive: {0}', v, rec=rec, verbosity=2)
+                        continue
+                    
+                    if k.lower() in whitelist:
                         continue
                     
                     self._log('--- remove header "{0}"', k, rec=rec, verbosity=2)
