@@ -363,7 +363,7 @@ class FUCore(object):
             (k, v) = h
             self._log('--- k == \'{0}\'', k, rec=rec, verbosity=4)
             
-            if k == 'Subject':
+            if k.lower() == 'subject':
                 have_subject = True
                 have_first_match = False
                 decoded_hdr = email.header.decode_header(v)
@@ -431,7 +431,7 @@ class FUCore(object):
                     # this will force creation of a dummy subject
                     have_subject = False
                     
-            elif k == 'Message-ID' or k == 'Message-Id':
+            elif k.lower() == 'message-id':
                 # fix <message-id
                 if v.strip().startswith('<') and not v.strip().endswith('>'):
                     self._log('--- appending missing > to Message-ID')
@@ -458,13 +458,13 @@ class FUCore(object):
                         
                     headers.append((k, v))
                     
-            elif k == 'References':
+            elif k.lower() == 'references':
                 # handle References with more than 998 octets
                 decoded_header = email.header.decode_header(v)
                 
                 if len(v) + len(k) > 990:
                     self._log('--- References {0} > 990 octets, shortening', len(v) + len(k), rec=rec)
-                    v = v.replace('\n', '').replace('\t', '').replace(' ', '')
+                    v = v.replace('\n', '').replace('\t', '').replace(' ', '').replace(',', '')
                     match = [x.replace('<', '').replace('>', '') for x in v.split('><')]
                     if match and len(match) >= 3:
                         v = [match[0]] + match[-2:]
@@ -480,7 +480,7 @@ class FUCore(object):
                     else:
                         self._log('!!! Could not split References into Message-IDs!', rec=rec, verbosity=0)
                         
-            elif k == 'Date' or k == 'X-Date':
+            elif k.lower() == 'date' or k.lower() == 'x-date':
                 if fix_dateline:
                     try:
                         v.decode('ascii')
