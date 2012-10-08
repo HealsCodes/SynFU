@@ -53,7 +53,7 @@ class PostFilter(FUCore):
     
     """
     
-    VERSION = '0.8d'
+    VERSION = '0.8e'
     NOTICE  = '(c) 2009-2010 Rene Koecher <shirk@bitspin.org>'
     
     def __init__(self, mode=None):
@@ -231,14 +231,16 @@ class PostFilter(FUCore):
                             sender = e['sender']
                         
                         if not sender in addrs:
-                                addrs[sender] = set()
+                            addrs[sender] = set()
                         
                         if 'broken_auth' in e:
                             sender_is_from = True
                         else:
                             sender_is_from = False
                         
-                        addrs[sender].update([(e['from'], sender_is_from),])
+                        approver = e.get('approve', None)
+
+                        addrs[sender].update([(e['from'], sender_is_from, approver),])
                         break
             
             if not addrs:
@@ -268,6 +270,8 @@ class PostFilter(FUCore):
                 mm._headers = self._filter_headers(tag, mm._headers)
             
                 for sender in addrs:
+                    have_approver = any(x[2] for x in addrs[sender])
+
                     try:
                         mm.replace_header('To', ','.join(x[0] for x in addrs[sender]))
                     except KeyError:
@@ -300,11 +304,11 @@ class PostFilter(FUCore):
                     for i in xrange(len(mm._headers) - 1, -1, -1):
                         (k, v) = mm._headers[i]
                         
-                        if k == 'Newsgroups':
+                        if k.lower() == 'newsgroups':
                             mm._headers.remove((k, v))
                             mm._headers.append(('X-Newsgroups', v))
                             
-                        elif k == 'Followup-To':
+                        elif k.lower() == 'followup-to':
                             mm._headers.remove((k, v))
                             mm._headers.append(('X-Followup-To', v))
                             self._log('--- Save X-Followup-To "{0}"', v, verbosity=2)                            
@@ -319,6 +323,11 @@ class PostFilter(FUCore):
                                     mm._headers.append(('Mail-Followup-To', e['from']))
                                     self._log('--- Set Mail-Followup-To to "{0}"', e['from'], verbosity=2)
 
+                        elif k.lower() == 'approved' and have_approver:
+                            mm._headers.remove((k, v))
+                            mm._headers.append(('X-Approved', v))
+                            self._log('--- Save X-Approved "{0}"', v, verbosity=2)
+
                     if self._conf.use_path_marker:
                         path = mm.get('Path', None)
                         if path is None:
@@ -327,10 +336,22 @@ class PostFilter(FUCore):
                         else:
                             if not self._conf.path_marker in path.split('!'):
                                 path.append('!{0}'.format(self._conf.path_marker))
-                                mm.rpelace_header('Path', path)
+                                mm.replace_header('Path', path)
                                 self._log('--- adding path marker to existing Path "{0}"'.format(self._conf.path_marker))
                             else:
                                 self._log('!!! Path-Header already contains a valid path_marker!?')
+
+                    if have_approver:
+                        # need to add an approval header
+                        for x in addrs[sender]:
+                            if x[2]:
+                                try:
+                                    mm.replace_header('Approved', x[2])
+                                except KeyError:
+                                    mm._headers.append(('Approved', x[2]))
+
+                                self._log('--- approving message as "{0}" (first match)'.format(x[2]))
+                                break
 
                     mm.add_header('X-SynFU-PostFilter', 
                                   PostFilter.NOTICE, version=PostFilter.VERSION)

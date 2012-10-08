@@ -123,6 +123,9 @@ class _PostfilterConfig(_FUCoreConfig):
             except Exception,err:
                 sys.stderr.write('Could not compile expression "{0[smtp]}": {1}\n'.format(e, err))
                 pass
+
+            if not 'approve' in e:
+                e['approve'] = None
         
         return self
 
