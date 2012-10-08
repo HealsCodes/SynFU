@@ -32,7 +32,7 @@ Created by René Köcher on 2009-12-19.
 from setuptools import setup, find_packages
 import sys, os
 
-version='0.4.15'
+version='0.4.16'
 
 setup(name='SynFU',
       version=version,
