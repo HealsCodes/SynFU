@@ -484,6 +484,10 @@ class FUCore(object):
                 if fix_dateline:
                     try:
                         v.decode('ascii')
+                        if v.upper().strip() == 'MAILPOST-UNKNOWN-DATE':
+                            headers.remove(h)
+                            self._log('--- fix Dat-header: removing header with "MAILPOST-UNKNOWN-DATE"')
+
                     except UnicodeDecodeError:
                         match = FUCore.TZ_EXP.findall(v)
                         if match:
